@@ -1,0 +1,3 @@
+[submodule "common/src/main/resources/META-INF/openapi"]
+	path = common/src/main/resources/META-INF/openapi
+	url = https://rndwww.nce.amadeus.net/git/scm/~sharmak/apicurio-registry-spec.git
