@@ -770,8 +770,9 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
 
         // If the metaData provided is null, try to figure it out from the content.
         EditableArtifactMetaDataDto md = metaData;
+        //Updating for additonal Metadata
         if (md == null) {
-            md = extractMetaData(artifactType, content);
+            md = extractMetaDataWithAdditionalMetadata(artifactType, content, md);
         }
         // This current method is skipped in KafkaSQL, and the one below is called directly,
         // so references must be added to the metadata there.
@@ -3852,6 +3853,19 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             metaData = new EditableArtifactMetaDataDto(emd.getName(), emd.getDescription(), emd.getLabels(), emd.getProperties());
         } else {
             metaData = new EditableArtifactMetaDataDto();
+        }
+        return metaData;
+    }
+
+    protected EditableArtifactMetaDataDto extractMetaDataWithAdditionalMetadata(String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaDataDto) {
+        ArtifactTypeUtilProvider provider = factory.getArtifactTypeProvider(artifactType);
+        ContentExtractor extractor = provider.getContentExtractor();
+        ExtractedMetaData emd = extractor.extract(content);
+        EditableArtifactMetaDataDto metaData;
+        if (emd != null) {
+            metaData = new EditableArtifactMetaDataDto(emd.getName(), emd.getDescription(), emd.getLabels(), emd.getProperties(), metaDataDto.getOwner(), metaDataDto.getApprovalStatus(), metaDataDto.getCategory());
+        } else {
+            metaData = new EditableArtifactMetaDataDto(null, null, null, null, metaDataDto.getOwner(), metaDataDto.getApprovalStatus(), metaDataDto.getCategory());
         }
         return metaData;
     }

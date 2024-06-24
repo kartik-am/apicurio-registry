@@ -959,7 +959,15 @@ public class GroupsResourceImpl implements GroupsResource {
 //            Changes related to Additonal Metadata
 
             final String finalArtifactId = artifactId;
-            EditableArtifactMetaDataDto metaData = getEditableMetaData(artifactName, artifactDescription);
+            EditableArtifactMetaDataDto metaData;
+            if(additionalMetaData != null) {
+                metaData = getEditableMetaDataWithAdditionalDetails(artifactName, artifactDescription, additionalMetaData);
+            } else {
+                metaData = getEditableMetaData(artifactName, artifactDescription);
+            }
+
+
+
             ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
             return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), finalArtifactId, artifactType, amd);
         } catch (ArtifactAlreadyExistsException ex) {
@@ -1170,6 +1178,14 @@ public class GroupsResourceImpl implements GroupsResource {
     private EditableArtifactMetaDataDto getEditableMetaData(String name, String description) {
         if (name != null || description != null) {
             return new EditableArtifactMetaDataDto(name, description, null, null);
+        }
+        return null;
+    }
+
+    private EditableArtifactMetaDataDto getEditableMetaDataWithAdditionalDetails(String name, String description, ArtifactAdditionalMetaData additionalMetaData) {
+        if (name != null || description != null) {
+            ApprovalState approvalState = ApprovalState.DRAFT;
+            return new EditableArtifactMetaDataDto(name, description, null, null, additionalMetaData.getOwner(), approvalState, additionalMetaData.getCategory());
         }
         return null;
     }

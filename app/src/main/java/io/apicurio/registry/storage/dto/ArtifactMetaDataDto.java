@@ -17,6 +17,8 @@
 
 package io.apicurio.registry.storage.dto;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.types.ArtifactState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,6 +58,29 @@ public class ArtifactMetaDataDto {
     private List<String> labels;
     private Map<String, String> properties;
     private List<ArtifactReferenceDto> references;
+    private String owner;
+    private ApprovalState approvalStatus;
+    private ArtifactCategory category;
+
+    public ArtifactMetaDataDto(String groupId, String id, String name, String description, String createdBy, long createdOn, String modifiedBy, long modifiedOn, String version, int versionId, long globalId, long contentId, String type, ArtifactState state, List<String> labels, Map<String, String> properties, List<ArtifactReferenceDto> references) {
+        this.groupId = groupId;
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.createdBy = createdBy;
+        this.createdOn = createdOn;
+        this.modifiedBy = modifiedBy;
+        this.modifiedOn = modifiedOn;
+        this.version = version;
+        this.versionId = versionId;
+        this.globalId = globalId;
+        this.contentId = contentId;
+        this.type = type;
+        this.state = state;
+        this.labels = labels;
+        this.properties = properties;
+        this.references = references;
+    }
 
     public ArtifactMetaDataDto() {
     }

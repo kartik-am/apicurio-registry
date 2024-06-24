@@ -17,6 +17,8 @@
 
 package io.apicurio.registry.storage.dto;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -41,11 +43,25 @@ public class EditableArtifactMetaDataDto {
     private String description;
     private List<String> labels;
     private Map<String, String> properties;
+    private String owner;
+    private ApprovalState approvalStatus;
+    private ArtifactCategory category;
 
     /**
      * Constructor.
      */
     public EditableArtifactMetaDataDto() {
+    }
+
+    /*
+    * Created a constructor
+    * */
+
+    public EditableArtifactMetaDataDto(String name, String description, List<String> labels, Map<String, String> properties) {
+        this.name = name;
+        this.description = description;
+        this.labels = labels;
+        this.properties = properties;
     }
 
     /**
@@ -103,4 +119,29 @@ public class EditableArtifactMetaDataDto {
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public ApprovalState getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(ApprovalState approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public ArtifactCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ArtifactCategory category) {
+        this.category = category;
+    }
 }
+
