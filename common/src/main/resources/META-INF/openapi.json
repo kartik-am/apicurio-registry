@@ -1,5 +1,8 @@
 {
     "openapi": "3.0.3",
+    "x-stoplight": {
+        "id": "7qe1976bfbska"
+    },
     "info": {
         "title": "Apicurio Registry API [v2]",
         "version": "2.5.x",
@@ -34,7 +37,10 @@
                 },
                 "operationId": "getContentById",
                 "summary": "Get artifact content by ID",
-                "description": "Gets the content for an artifact version in the registry using the unique content\nidentifier for that content.  This content ID may be shared by multiple artifact\nversions in the case where the artifact versions are identical.\n\nThis operation may fail for one of the following reasons:\n\n* No content with this `contentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets the content for an artifact version in the registry using the unique content\nidentifier for that content.  This content ID may be shared by multiple artifact\nversions in the case where the artifact versions are identical.\n\nThis operation may fail for one of the following reasons:\n\n* No content with this `contentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "vq7lzrvsl2ksa"
+                }
             },
             "parameters": [
                 {
@@ -78,7 +84,10 @@
                 },
                 "operationId": "getContentByGlobalId",
                 "summary": "Get artifact by global ID",
-                "description": "Gets the content for an artifact version in the registry using its globally unique\nidentifier.\n\nThis operation may fail for one of the following reasons:\n\n* No artifact version with this `globalId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets the content for an artifact version in the registry using its globally unique\nidentifier.\n\nThis operation may fail for one of the following reasons:\n\n* No artifact version with this `globalId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "vfx8zn5juud3f"
+                }
             },
             "parameters": [
                 {
@@ -112,7 +121,10 @@
                 },
                 "operationId": "getContentByHash",
                 "summary": "Get artifact content by SHA-256 hash",
-                "description": "Gets the content for an artifact version in the registry using the \nSHA-256 hash of the content.  This content hash may be shared by multiple artifact\nversions in the case where the artifact versions have identical content.\n\nThis operation may fail for one of the following reasons:\n\n* No content with this `contentHash` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets the content for an artifact version in the registry using the \nSHA-256 hash of the content.  This content hash may be shared by multiple artifact\nversions in the case where the artifact versions have identical content.\n\nThis operation may fail for one of the following reasons:\n\n* No content with this `contentHash` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "is42gfnezm2e4"
+                }
             },
             "parameters": [
                 {
@@ -153,7 +165,10 @@
                 },
                 "operationId": "listArtifactTypes",
                 "summary": "List artifact types",
-                "description": "Gets a list of all the configured artifact types.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets a list of all the configured artifact types.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "94rrcr0lsrzn1"
+                }
             }
         },
         "/admin/rules": {
@@ -183,7 +198,10 @@
                 },
                 "operationId": "listGlobalRules",
                 "summary": "List global rules",
-                "description": "Gets a list of all the currently configured global rules (if any).\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets a list of all the currently configured global rules (if any).\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "pa9we41f4m6wv"
+                }
             },
             "post": {
                 "requestBody": {
@@ -216,7 +234,10 @@
                 },
                 "operationId": "createGlobalRule",
                 "summary": "Create global rule",
-                "description": "Adds a rule to the list of globally configured rules.\n\nThis operation can fail for the following reasons:\n\n* The rule type is unknown (HTTP error `400`)\n* The rule already exists (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Adds a rule to the list of globally configured rules.\n\nThis operation can fail for the following reasons:\n\n* The rule type is unknown (HTTP error `400`)\n* The rule already exists (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "n9nd8r28ekdcy"
+                }
             },
             "delete": {
                 "tags": [
@@ -233,7 +254,10 @@
                 },
                 "operationId": "deleteAllGlobalRules",
                 "summary": "Delete all global rules",
-                "description": "Deletes all globally configured rules.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes all globally configured rules.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "qbb2liq0jf8k0"
+                }
             }
         },
         "/admin/rules/{rule}": {
@@ -263,7 +287,10 @@
                 },
                 "operationId": "getGlobalRuleConfig",
                 "summary": "Get global rule configuration",
-                "description": "Returns information about the named globally configured rule.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns information about the named globally configured rule.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "gad4jzq5pffu5"
+                }
             },
             "put": {
                 "requestBody": {
@@ -300,7 +327,10 @@
                 },
                 "operationId": "updateGlobalRuleConfig",
                 "summary": "Update global rule configuration",
-                "description": "Updates the configuration for a globally configured rule.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the configuration for a globally configured rule.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "5dn404qjb50li"
+                }
             },
             "delete": {
                 "tags": [
@@ -320,7 +350,10 @@
                 },
                 "operationId": "deleteGlobalRule",
                 "summary": "Delete global rule",
-                "description": "Deletes a single global rule.  If this is the only rule configured, this is the same\nas deleting **all** rules.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* Rule cannot be deleted (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes a single global rule.  If this is the only rule configured, this is the same\nas deleting **all** rules.\n\nThis operation can fail for the following reasons:\n\n* Invalid rule name/type (HTTP error `400`)\n* No rule with name/type `rule` exists (HTTP error `404`)\n* Rule cannot be deleted (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "qi85j9z66cbe3"
+                }
             },
             "parameters": [
                 {
@@ -360,7 +393,10 @@
                 },
                 "operationId": "listLogConfigurations",
                 "summary": "List logging configurations",
-                "description": "List all of the configured logging levels.  These override the default\nlogging configuration."
+                "description": "List all of the configured logging levels.  These override the default\nlogging configuration.",
+                "x-stoplight": {
+                    "id": "04ppc0nd6771c"
+                }
             }
         },
         "/admin/loggers/{logger}": {
@@ -386,7 +422,10 @@
                 },
                 "operationId": "getLogConfiguration",
                 "summary": "Get a single logger configuration",
-                "description": "Returns the configured logger configuration for the provided logger name, if no logger configuration is persisted it will return the current default log configuration in the system."
+                "description": "Returns the configured logger configuration for the provided logger name, if no logger configuration is persisted it will return the current default log configuration in the system.",
+                "x-stoplight": {
+                    "id": "lbxd45ny1zabu"
+                }
             },
             "put": {
                 "requestBody": {
@@ -420,7 +459,10 @@
                 },
                 "operationId": "setLogConfiguration",
                 "summary": "Set a logger's configuration",
-                "description": "Configures the logger referenced by the provided logger name with the given configuration."
+                "description": "Configures the logger referenced by the provided logger name with the given configuration.",
+                "x-stoplight": {
+                    "id": "xgueyha5h4y83"
+                }
             },
             "delete": {
                 "tags": [
@@ -443,7 +485,10 @@
                 },
                 "operationId": "removeLogConfiguration",
                 "summary": "Removes logger configuration",
-                "description": "Removes the configured logger configuration (if any) for the given logger."
+                "description": "Removes the configured logger configuration (if any) for the given logger.",
+                "x-stoplight": {
+                    "id": "qigmlkbi0fxel"
+                }
             },
             "parameters": [
                 {
@@ -480,7 +525,10 @@
                 },
                 "operationId": "getSystemInfo",
                 "summary": "Get system information",
-                "description": "This operation retrieves information about the running registry system, such as the version\nof the software and when it was built."
+                "description": "This operation retrieves information about the running registry system, such as the version\nof the software and when it was built.",
+                "x-stoplight": {
+                    "id": "2oqvfmpis3t7i"
+                }
             }
         },
         "/search/artifacts": {
@@ -610,7 +658,10 @@
                 },
                 "operationId": "searchArtifacts",
                 "summary": "Search for artifacts",
-                "description": "Returns a paginated list of all artifacts that match the provided filter criteria.\n"
+                "description": "Returns a paginated list of all artifacts that match the provided filter criteria.\n",
+                "x-stoplight": {
+                    "id": "k3awhcjoxmcq1"
+                }
             },
             "post": {
                 "requestBody": {
@@ -707,7 +758,10 @@
                 },
                 "operationId": "searchArtifactsByContent",
                 "summary": "Search for artifacts by content",
-                "description": "Returns a paginated list of all artifacts with at least one version that matches the\nposted content.\n"
+                "description": "Returns a paginated list of all artifacts with at least one version that matches the\nposted content.\n",
+                "x-stoplight": {
+                    "id": "ne8al9gr30l56"
+                }
             }
         },
         "/admin/export": {
@@ -748,7 +802,10 @@
                 },
                 "operationId": "exportData",
                 "summary": "Export registry data",
-                "description": "Exports registry data as a ZIP archive."
+                "description": "Exports registry data as a ZIP archive.",
+                "x-stoplight": {
+                    "id": "l2ycd0mptl5dq"
+                }
             }
         },
         "/admin/import": {
@@ -797,7 +854,10 @@
                 },
                 "operationId": "importData",
                 "summary": "Import registry data",
-                "description": "Imports registry data that was previously exported using the `/admin/export` operation."
+                "description": "Imports registry data that was previously exported using the `/admin/export` operation.",
+                "x-stoplight": {
+                    "id": "8blnq3qjlsaxj"
+                }
             }
         },
         "/groups/{groupId}/artifacts/{artifactId}/state": {
@@ -832,7 +892,10 @@
                 },
                 "operationId": "updateArtifactState",
                 "summary": "Update artifact state",
-                "description": "Updates the state of the artifact.  For example, you can use this to mark the latest version of an artifact as `DEPRECATED`. The operation changes the state of the latest version of the artifact, even if this version is `DISABLED`. If multiple versions exist, only the most recent is changed.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the state of the artifact.  For example, you can use this to mark the latest version of an artifact as `DEPRECATED`. The operation changes the state of the latest version of the artifact, even if this version is `DISABLED`. If multiple versions exist, only the most recent is changed.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "qwl0d9ujkuzhj"
+                }
             },
             "parameters": [
                 {
@@ -881,7 +944,10 @@
                 },
                 "operationId": "getArtifactVersionMetaData",
                 "summary": "Get artifact version metadata",
-                "description": "Retrieves the metadata for a single version of the artifact.  The version metadata is \na subset of the artifact metadata and only includes the metadata that is specific to\nthe version (for example, this doesn't include `modifiedOn`).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Retrieves the metadata for a single version of the artifact.  The version metadata is \na subset of the artifact metadata and only includes the metadata that is specific to\nthe version (for example, this doesn't include `modifiedOn`).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "a485s7t6i90n2"
+                }
             },
             "put": {
                 "requestBody": {
@@ -910,7 +976,10 @@
                 },
                 "operationId": "updateArtifactVersionMetaData",
                 "summary": "Update artifact version metadata",
-                "description": "Updates the user-editable portion of the artifact version's metadata.  Only some of \nthe metadata fields are editable by the user.  For example, `description` is editable, \nbut `createdOn` is not.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the user-editable portion of the artifact version's metadata.  Only some of \nthe metadata fields are editable by the user.  For example, `description` is editable, \nbut `createdOn` is not.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "j3u6jb4c07nrg"
+                }
             },
             "delete": {
                 "tags": [
@@ -929,7 +998,10 @@
                 },
                 "operationId": "deleteArtifactVersionMetaData",
                 "summary": "Delete artifact version metadata",
-                "description": "Deletes the user-editable metadata properties of the artifact version.  Any properties\nthat are not user-editable are preserved.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes the user-editable metadata properties of the artifact version.  Any properties\nthat are not user-editable are preserved.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "3g6tsl7usukxv"
+                }
             },
             "parameters": [
                 {
@@ -990,7 +1062,10 @@
                 },
                 "operationId": "getArtifactVersion",
                 "summary": "Get artifact version",
-                "description": "Retrieves a single version of the artifact content.  Both the `artifactId` and the\nunique `version` number must be provided.  The `Content-Type` of the response depends \non the artifact type.  In most cases, this is `application/json`, but for some types \nit may be different (for example, `PROTOBUF`).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Retrieves a single version of the artifact content.  Both the `artifactId` and the\nunique `version` number must be provided.  The `Content-Type` of the response depends \non the artifact type.  In most cases, this is `application/json`, but for some types \nit may be different (for example, `PROTOBUF`).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "rc7z2d53uapz5"
+                }
             },
             "delete": {
                 "tags": [
@@ -1012,7 +1087,10 @@
                 },
                 "operationId": "deleteArtifactVersion",
                 "summary": "Delete artifact version",
-                "description": "Deletes a single version of the artifact. Parameters `groupId`, `artifactId` and the unique `version`\nare needed. If this is the only version of the artifact, this operation is the same as \ndeleting the entire artifact.\n\nThis feature is disabled by default and it's discouraged for normal usage. To enable it, set the `registry.rest.artifact.deletion.enabled` property to true. This operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n * Feature is disabled (HTTP error `405`)\n * A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes a single version of the artifact. Parameters `groupId`, `artifactId` and the unique `version`\nare needed. If this is the only version of the artifact, this operation is the same as \ndeleting the entire artifact.\n\nThis feature is disabled by default and it's discouraged for normal usage. To enable it, set the `registry.rest.artifact.deletion.enabled` property to true. This operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n * Feature is disabled (HTTP error `405`)\n * A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "ggls4klwacbap"
+                }
             },
             "parameters": [
                 {
@@ -1076,7 +1154,10 @@
                 },
                 "operationId": "updateArtifactVersionState",
                 "summary": "Update artifact version state",
-                "description": "Updates the state of a specific version of an artifact.  For example, you can use \nthis operation to disable a specific version.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the state of a specific version of an artifact.  For example, you can use \nthis operation to disable a specific version.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "i3aa4paz7baht"
+                }
             },
             "parameters": [
                 {
@@ -1137,7 +1218,10 @@
                 },
                 "operationId": "listArtifactRules",
                 "summary": "List artifact rules",
-                "description": "Returns a list of all rules configured for the artifact.  The set of rules determines\nhow the content of an artifact can evolve over time.  If no rules are configured for\nan artifact, the set of globally configured rules are used.  If no global rules \nare defined, there are no restrictions on content evolution.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Returns a list of all rules configured for the artifact.  The set of rules determines\nhow the content of an artifact can evolve over time.  If no rules are configured for\nan artifact, the set of globally configured rules are used.  If no global rules \nare defined, there are no restrictions on content evolution.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "3osa0sf81y6wx"
+                }
             },
             "post": {
                 "requestBody": {
@@ -1169,7 +1253,10 @@
                 },
                 "operationId": "createArtifactRule",
                 "summary": "Create artifact rule",
-                "description": "Adds a rule to the list of rules that get applied to the artifact when adding new\nversions.  All configured rules must pass to successfully add a new artifact version.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* Rule (named in the request body) is unknown (HTTP error `400`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Adds a rule to the list of rules that get applied to the artifact when adding new\nversions.  All configured rules must pass to successfully add a new artifact version.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* Rule (named in the request body) is unknown (HTTP error `400`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "4qdf5wcrrz1na"
+                }
             },
             "delete": {
                 "tags": [
@@ -1188,7 +1275,10 @@
                 },
                 "operationId": "deleteArtifactRules",
                 "summary": "Delete artifact rules",
-                "description": "Deletes all of the rules configured for the artifact.  After this is done, the global\nrules apply to the artifact again.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Deletes all of the rules configured for the artifact.  After this is done, the global\nrules apply to the artifact again.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "ylvp9kdhdjk2o"
+                }
             },
             "parameters": [
                 {
@@ -1237,7 +1327,10 @@
                 },
                 "operationId": "getArtifactRuleConfig",
                 "summary": "Get artifact rule configuration",
-                "description": "Returns information about a single rule configured for an artifact.  This is useful\nwhen you want to know what the current configuration settings are for a specific rule.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Returns information about a single rule configured for an artifact.  This is useful\nwhen you want to know what the current configuration settings are for a specific rule.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "x1xo9qep79drc"
+                }
             },
             "put": {
                 "requestBody": {
@@ -1273,7 +1366,10 @@
                 },
                 "operationId": "updateArtifactRuleConfig",
                 "summary": "Update artifact rule configuration",
-                "description": "Updates the configuration of a single rule for the artifact.  The configuration data\nis specific to each rule type, so the configuration of the `COMPATIBILITY` rule \nis in a different format from the configuration of the `VALIDITY` rule.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the configuration of a single rule for the artifact.  The configuration data\nis specific to each rule type, so the configuration of the `COMPATIBILITY` rule \nis in a different format from the configuration of the `VALIDITY` rule.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "5txwu6xiggsp8"
+                }
             },
             "delete": {
                 "tags": [
@@ -1292,7 +1388,10 @@
                 },
                 "operationId": "deleteArtifactRule",
                 "summary": "Delete artifact rule",
-                "description": "Deletes a rule from the artifact.  This results in the rule no longer applying for\nthis artifact.  If this is the only rule configured for the artifact, this is the \nsame as deleting **all** rules, and the globally configured rules now apply to\nthis artifact.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Deletes a rule from the artifact.  This results in the rule no longer applying for\nthis artifact.  If this is the only rule configured for the artifact, this is the \nsame as deleting **all** rules, and the globally configured rules now apply to\nthis artifact.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No rule with this name/type is configured for this artifact (HTTP error `404`)\n* Invalid rule type (HTTP error `400`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "8a2s2fw3nfw57"
+                }
             },
             "parameters": [
                 {
@@ -1355,7 +1454,10 @@
                 },
                 "operationId": "getRoleMapping",
                 "summary": "Return a single role mapping",
-                "description": "Gets the details of a single role mapping (by `principalId`).\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the `principalId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets the details of a single role mapping (by `principalId`).\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the `principalId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "qgtgndbi1islf"
+                }
             },
             "put": {
                 "requestBody": {
@@ -1384,7 +1486,10 @@
                 },
                 "operationId": "updateRoleMapping",
                 "summary": "Update a role mapping",
-                "description": "Updates a single role mapping for one user/principal.\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the principalId exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates a single role mapping for one user/principal.\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the principalId exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "y379kv3cron2h"
+                }
             },
             "delete": {
                 "tags": [
@@ -1403,7 +1508,10 @@
                 },
                 "operationId": "deleteRoleMapping",
                 "summary": "Delete a role mapping",
-                "description": "Deletes a single role mapping, effectively denying access to a user/principal.\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the principalId exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes a single role mapping, effectively denying access to a user/principal.\n\nThis operation can fail for the following reasons:\n\n* No role mapping for the principalId exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "2rgtmi7puzms4"
+                }
             },
             "parameters": [
                 {
@@ -1443,7 +1551,10 @@
                 },
                 "operationId": "listRoleMappings",
                 "summary": "List all role mappings",
-                "description": "Gets a list of all role mappings configured in the registry (if any).\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets a list of all role mappings configured in the registry (if any).\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "paar6snps3vvr"
+                }
             },
             "post": {
                 "requestBody": {
@@ -1469,7 +1580,10 @@
                 },
                 "operationId": "createRoleMapping",
                 "summary": "Create a new role mapping",
-                "description": "Creates a new mapping between a user/principal and a role.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n\n"
+                "description": "Creates a new mapping between a user/principal and a role.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n\n",
+                "x-stoplight": {
+                    "id": "mk11v2u4suo4j"
+                }
             }
         },
         "/users/me": {
@@ -1495,7 +1609,10 @@
                 },
                 "operationId": "getCurrentUserInfo",
                 "summary": "Get current user",
-                "description": "Returns information about the currently authenticated user."
+                "description": "Returns information about the currently authenticated user.",
+                "x-stoplight": {
+                    "id": "1c24fbaqbpvhb"
+                }
             }
         },
         "/ids/contentHashes/{contentHash}/references": {
@@ -1520,7 +1637,10 @@
                 },
                 "operationId": "referencesByContentHash",
                 "summary": "List artifact references by hash",
-                "description": "Returns a list containing all the artifact references using the artifact content hash.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns a list containing all the artifact references using the artifact content hash.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "ounc41q9bow1r"
+                }
             },
             "parameters": [
                 {
@@ -1556,7 +1676,10 @@
                 },
                 "operationId": "referencesByContentId",
                 "summary": "List artifact references by content ID",
-                "description": "Returns a list containing all the artifact references using the artifact content ID.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)"
+                "description": "Returns a list containing all the artifact references using the artifact content ID.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "l5mrgnu360kxp"
+                }
             },
             "parameters": [
                 {
@@ -1593,7 +1716,10 @@
                 },
                 "operationId": "referencesByGlobalId",
                 "summary": "List artifact references by global ID",
-                "description": "Returns a list containing all the artifact references using the artifact global ID.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)"
+                "description": "Returns a list containing all the artifact references using the artifact global ID.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "4ijypvus865vy"
+                }
             },
             "parameters": [
                 {
@@ -1645,7 +1771,10 @@
                 },
                 "operationId": "getArtifactVersionReferences",
                 "summary": "Get artifact version references",
-                "description": "Retrieves all references for a single version of an artifact.  Both the `artifactId` and the\nunique `version` number must be provided.  Using the `refType` query parameter, it is possible\nto retrieve an array of either the inbound or outbound references.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Retrieves all references for a single version of an artifact.  Both the `artifactId` and the\nunique `version` number must be provided.  Using the `refType` query parameter, it is possible\nto retrieve an array of either the inbound or outbound references.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "bcx520786kaoh"
+                }
             },
             "parameters": [
                 {
@@ -1712,7 +1841,10 @@
                 },
                 "operationId": "listConfigProperties",
                 "summary": "List all configuration properties",
-                "description": "Returns a list of all configuration properties that have been set.  The list is not paged.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns a list of all configuration properties that have been set.  The list is not paged.\n\nThis operation may fail for one of the following reasons:\n\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "igmln8enz7buk"
+                }
             }
         },
         "/admin/config/properties/{propertyName}": {
@@ -1741,7 +1873,10 @@
                 },
                 "operationId": "getConfigProperty",
                 "summary": "Get configuration property value",
-                "description": "Returns the value of a single configuration property.\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns the value of a single configuration property.\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "ej0ypweufmred"
+                }
             },
             "put": {
                 "requestBody": {
@@ -1770,7 +1905,10 @@
                 },
                 "operationId": "updateConfigProperty",
                 "summary": "Update a configuration property",
-                "description": "Updates the value of a single configuration property.\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the value of a single configuration property.\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "ekymyz297rsik"
+                }
             },
             "delete": {
                 "tags": [
@@ -1789,7 +1927,10 @@
                 },
                 "operationId": "resetConfigProperty",
                 "summary": "Reset a configuration property",
-                "description": "Resets the value of a single configuration property.  This will return the property to\nits default value (see external documentation for supported properties and their default\nvalues).\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Resets the value of a single configuration property.  This will return the property to\nits default value (see external documentation for supported properties and their default\nvalues).\n\nThis operation may fail for one of the following reasons:\n\n* Property not found or not configured (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "e95ojq508wvu7"
+                }
             },
             "parameters": [
                 {
@@ -1826,7 +1967,10 @@
                 },
                 "operationId": "getResourceLimits",
                 "summary": "Get resource limits information",
-                "description": "This operation retrieves the list of limitations on used resources, that are applied on the current instance of Registry."
+                "description": "This operation retrieves the list of limitations on used resources, that are applied on the current instance of Registry.",
+                "x-stoplight": {
+                    "id": "rqsovon6m3p45"
+                }
             }
         },
         "/groups/{groupId}/artifacts/{artifactId}": {
@@ -1859,7 +2003,10 @@
                 },
                 "operationId": "getLatestArtifact",
                 "summary": "Get latest artifact",
-                "description": "Returns the latest version of the artifact in its raw form.  The `Content-Type` of the\nresponse depends on the artifact type.  In most cases, this is `application/json`, but \nfor some types it may be different (for example, `PROTOBUF`).\nIf the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used.\n\nThis operation may fail for one of the following reasons:\n\n* No artifact with this `artifactId` exists or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns the latest version of the artifact in its raw form.  The `Content-Type` of the\nresponse depends on the artifact type.  In most cases, this is `application/json`, but \nfor some types it may be different (for example, `PROTOBUF`).\nIf the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used.\n\nThis operation may fail for one of the following reasons:\n\n* No artifact with this `artifactId` exists or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "2mn6zhzd6tjf5"
+                }
             },
             "put": {
                 "requestBody": {
@@ -2006,7 +2153,10 @@
                 },
                 "operationId": "updateArtifact",
                 "summary": "Update artifact",
-                "description": "Updates an artifact by uploading new content.  The body of the request can\nbe the raw content of the artifact or a JSON object containing both the raw content and\na set of references to other artifacts..  This is typically in JSON format for *most*\nof the supported types, but may be in another format for a few (for example, `PROTOBUF`).\nThe type of the content should be compatible with the artifact's type (it would be\nan error to update an `AVRO` artifact with new `OPENAPI` content, for example).\n\nThe update could fail for a number of reasons including:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n\nWhen successful, this creates a new version of the artifact, making it the most recent\n(and therefore official) version of the artifact."
+                "description": "Updates an artifact by uploading new content.  The body of the request can\nbe the raw content of the artifact or a JSON object containing both the raw content and\na set of references to other artifacts..  This is typically in JSON format for *most*\nof the supported types, but may be in another format for a few (for example, `PROTOBUF`).\nThe type of the content should be compatible with the artifact's type (it would be\nan error to update an `AVRO` artifact with new `OPENAPI` content, for example).\n\nThe update could fail for a number of reasons including:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n\nWhen successful, this creates a new version of the artifact, making it the most recent\n(and therefore official) version of the artifact.",
+                "x-stoplight": {
+                    "id": "in639ab2ugn7w"
+                }
             },
             "delete": {
                 "tags": [
@@ -2025,7 +2175,10 @@
                 },
                 "operationId": "deleteArtifact",
                 "summary": "Delete artifact",
-                "description": "Deletes an artifact completely, resulting in all versions of the artifact also being\ndeleted.  This may fail for one of the following reasons:\n\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Deletes an artifact completely, resulting in all versions of the artifact also being\ndeleted.  This may fail for one of the following reasons:\n\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "o7m3pwgfbdhm1"
+                }
             },
             "parameters": [
                 {
@@ -2105,7 +2258,10 @@
                 },
                 "operationId": "listArtifactsInGroup",
                 "summary": "List artifacts in group",
-                "description": "Returns a list of all artifacts in the group.  This list is paged."
+                "description": "Returns a list of all artifacts in the group.  This list is paged.",
+                "x-stoplight": {
+                    "id": "4nbp6bynn4gkv"
+                }
             },
             "post": {
                 "requestBody": {
@@ -2305,7 +2461,10 @@
                 },
                 "operationId": "createArtifact",
                 "summary": "Create artifact",
-                "description": "Creates a new artifact by posting the artifact content.  The body of the request should\nbe the raw content of the artifact.  This is typically in JSON format for *most* of the \nsupported types, but may be in another format for a few (for example, `PROTOBUF`).\n\nThe registry attempts to figure out what kind of artifact is being added from the\nfollowing supported list:\n\n* Avro (`AVRO`)\n* Protobuf (`PROTOBUF`)\n* JSON Schema (`JSON`)\n* Kafka Connect (`KCONNECT`)\n* OpenAPI (`OPENAPI`)\n* AsyncAPI (`ASYNCAPI`)\n* GraphQL (`GRAPHQL`)\n* Web Services Description Language (`WSDL`)\n* XML Schema (`XSD`)\n\nAlternatively, you can specify the artifact type using the `X-Registry-ArtifactType` \nHTTP request header, or include a hint in the request's `Content-Type`.  For example:\n\n```\nContent-Type: application/json; artifactType=AVRO\n```\n\nAn artifact is created using the content provided in the body of the request.  This\ncontent is created under a unique artifact ID that can be provided in the request\nusing the `X-Registry-ArtifactId` request header.  If not provided in the request,\nthe server generates a unique ID for the artifact.  It is typically recommended\nthat callers provide the ID, because this is typically a meaningful identifier, \nand for most use cases should be supplied by the caller.\n\nIf an artifact with the provided artifact ID already exists, the default behavior\nis for the server to reject the content with a 409 error.  However, the caller can\nsupply the `ifExists` query parameter to alter this default behavior. The `ifExists`\nquery parameter can have one of the following values:\n\n* `FAIL` (*default*) - server rejects the content with a 409 error\n* `UPDATE` - server updates the existing artifact and returns the new metadata\n* `RETURN` - server does not create or add content to the server, but instead \nreturns the metadata for the existing artifact\n* `RETURN_OR_UPDATE` - server returns an existing **version** that matches the \nprovided content if such a version exists, otherwise a new version is created\n\nThis operation may fail for one of the following reasons:\n\n* An invalid `ArtifactType` was indicated (HTTP error `400`)\n* No `ArtifactType` was indicated and the server could not determine one from the content (HTTP error `400`)\n* Provided content (request body) was empty (HTTP error `400`)\n* An artifact with the provided ID already exists (HTTP error `409`)\n* The content violates one of the configured global rules (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Creates a new artifact by posting the artifact content.  The body of the request should\nbe the raw content of the artifact.  This is typically in JSON format for *most* of the \nsupported types, but may be in another format for a few (for example, `PROTOBUF`).\n\nThe registry attempts to figure out what kind of artifact is being added from the\nfollowing supported list:\n\n* Avro (`AVRO`)\n* Protobuf (`PROTOBUF`)\n* JSON Schema (`JSON`)\n* Kafka Connect (`KCONNECT`)\n* OpenAPI (`OPENAPI`)\n* AsyncAPI (`ASYNCAPI`)\n* GraphQL (`GRAPHQL`)\n* Web Services Description Language (`WSDL`)\n* XML Schema (`XSD`)\n\nAlternatively, you can specify the artifact type using the `X-Registry-ArtifactType` \nHTTP request header, or include a hint in the request's `Content-Type`.  For example:\n\n```\nContent-Type: application/json; artifactType=AVRO\n```\n\nAn artifact is created using the content provided in the body of the request.  This\ncontent is created under a unique artifact ID that can be provided in the request\nusing the `X-Registry-ArtifactId` request header.  If not provided in the request,\nthe server generates a unique ID for the artifact.  It is typically recommended\nthat callers provide the ID, because this is typically a meaningful identifier, \nand for most use cases should be supplied by the caller.\n\nIf an artifact with the provided artifact ID already exists, the default behavior\nis for the server to reject the content with a 409 error.  However, the caller can\nsupply the `ifExists` query parameter to alter this default behavior. The `ifExists`\nquery parameter can have one of the following values:\n\n* `FAIL` (*default*) - server rejects the content with a 409 error\n* `UPDATE` - server updates the existing artifact and returns the new metadata\n* `RETURN` - server does not create or add content to the server, but instead \nreturns the metadata for the existing artifact\n* `RETURN_OR_UPDATE` - server returns an existing **version** that matches the \nprovided content if such a version exists, otherwise a new version is created\n\nThis operation may fail for one of the following reasons:\n\n* An invalid `ArtifactType` was indicated (HTTP error `400`)\n* No `ArtifactType` was indicated and the server could not determine one from the content (HTTP error `400`)\n* Provided content (request body) was empty (HTTP error `400`)\n* An artifact with the provided ID already exists (HTTP error `409`)\n* The content violates one of the configured global rules (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "twbze9k9zwyyj"
+                }
             },
             "delete": {
                 "tags": [
@@ -2321,7 +2480,10 @@
                 },
                 "operationId": "deleteArtifactsInGroup",
                 "summary": "Delete artifacts in group",
-                "description": "Deletes all of the artifacts that exist in a given group."
+                "description": "Deletes all of the artifacts that exist in a given group.",
+                "x-stoplight": {
+                    "id": "x76a05c92esrd"
+                }
             },
             "parameters": [
                 {
@@ -2368,7 +2530,10 @@
                 },
                 "operationId": "testUpdateArtifact",
                 "summary": "Test update artifact",
-                "description": "Tests whether an update to the artifact's content *would* succeed for the provided content.\nUltimately, this applies any rules configured for the artifact against the given content\nto determine whether the rules would pass or fail, but without actually updating the artifact\ncontent.\n\nThe body of the request should be the raw content of the artifact.  This is typically in \nJSON format for *most* of the supported types, but may be in another format for a few \n(for example, `PROTOBUF`).\n\nThe update could fail for a number of reasons including:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* The provided artifact type is not recognized (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n\nWhen successful, this operation simply returns a *No Content* response.  This response\nindicates that the content is valid against the configured content rules for the \nartifact (or the global rules if no artifact rules are enabled)."
+                "description": "Tests whether an update to the artifact's content *would* succeed for the provided content.\nUltimately, this applies any rules configured for the artifact against the given content\nto determine whether the rules would pass or fail, but without actually updating the artifact\ncontent.\n\nThe body of the request should be the raw content of the artifact.  This is typically in \nJSON format for *most* of the supported types, but may be in another format for a few \n(for example, `PROTOBUF`).\n\nThe update could fail for a number of reasons including:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* The provided artifact type is not recognized (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n\nWhen successful, this operation simply returns a *No Content* response.  This response\nindicates that the content is valid against the configured content rules for the \nartifact (or the global rules if no artifact rules are enabled).",
+                "x-stoplight": {
+                    "id": "syvb6twlhgvca"
+                }
             },
             "parameters": [
                 {
@@ -2447,7 +2612,10 @@
                 },
                 "operationId": "listArtifactVersions",
                 "summary": "List artifact versions",
-                "description": "Returns a list of all versions of the artifact.  The result set is paged.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Returns a list of all versions of the artifact.  The result set is paged.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "yfnrrbvaad1uq"
+                }
             },
             "post": {
                 "requestBody": {
@@ -2594,7 +2762,10 @@
                 },
                 "operationId": "createArtifactVersion",
                 "summary": "Create artifact version",
-                "description": "Creates a new version of the artifact by uploading new content.  The configured rules for\nthe artifact are applied, and if they all pass, the new content is added as the most recent \nversion of the artifact.  If any of the rules fail, an error is returned.\n\nThe body of the request can be the raw content of the new artifact version, or the raw content \nand a set of references pointing to other artifacts, and the type\nof that content should match the artifact's type (for example if the artifact type is `AVRO`\nthen the content of the request should be an Apache Avro document).\n\nThis operation can fail for the following reasons:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Creates a new version of the artifact by uploading new content.  The configured rules for\nthe artifact are applied, and if they all pass, the new content is added as the most recent \nversion of the artifact.  If any of the rules fail, an error is returned.\n\nThe body of the request can be the raw content of the new artifact version, or the raw content \nand a set of references pointing to other artifacts, and the type\nof that content should match the artifact's type (for example if the artifact type is `AVRO`\nthen the content of the request should be an Apache Avro document).\n\nThis operation can fail for the following reasons:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* The new content violates one of the rules configured for the artifact (HTTP error `409`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "rippom61gekr6"
+                }
             },
             "parameters": [
                 {
@@ -2643,7 +2814,10 @@
                 },
                 "operationId": "getArtifactOwner",
                 "summary": "Get artifact owner",
-                "description": "Gets the owner of an artifact in the registry.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Gets the owner of an artifact in the registry.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "f5x1rci1fgbpd"
+                }
             },
             "put": {
                 "requestBody": {
@@ -2672,7 +2846,10 @@
                 },
                 "operationId": "updateArtifactOwner",
                 "summary": "Update artifact owner",
-                "description": "Changes the ownership of an artifact.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Changes the ownership of an artifact.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "ln1307iija3mg"
+                }
             },
             "parameters": [
                 {
@@ -2721,7 +2898,10 @@
                 },
                 "operationId": "getGroupById",
                 "summary": "Get a group by the specified ID.",
-                "description": "Returns a group using the specified id.\n\nThis operation can fail for the following reasons:\n\n* No group exists with the specified ID (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Returns a group using the specified id.\n\nThis operation can fail for the following reasons:\n\n* No group exists with the specified ID (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "bs9bh6im3dt4f"
+                }
             },
             "delete": {
                 "tags": [
@@ -2740,7 +2920,10 @@
                 },
                 "operationId": "deleteGroupById",
                 "summary": "Delete a group by the specified ID.",
-                "description": "Deletes a group by identifier.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n* The group does not exist (HTTP error `404`)\n"
+                "description": "Deletes a group by identifier.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n* The group does not exist (HTTP error `404`)\n",
+                "x-stoplight": {
+                    "id": "oeleff0stzmgm"
+                }
             },
             "parameters": [
                 {
@@ -2811,7 +2994,10 @@
                 },
                 "operationId": "listGroups",
                 "summary": "List groups",
-                "description": "Returns a list of all groups.  This list is paged."
+                "description": "Returns a list of all groups.  This list is paged.",
+                "x-stoplight": {
+                    "id": "neuehsmftvoup"
+                }
             },
             "post": {
                 "requestBody": {
@@ -2847,7 +3033,10 @@
                 },
                 "operationId": "createGroup",
                 "summary": "Create a new group",
-                "description": "Creates a new group.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n* The group already exist (HTTP error `409`)\n"
+                "description": "Creates a new group.\n\nThis operation can fail for the following reasons:\n\n* A server error occurred (HTTP error `500`)\n* The group already exist (HTTP error `409`)\n",
+                "x-stoplight": {
+                    "id": "9fvsdeps6s357"
+                }
             }
         },
         "/groups/{groupId}/artifacts/{artifactId}/meta": {
@@ -2876,7 +3065,10 @@
                 },
                 "operationId": "getArtifactMetaData",
                 "summary": "Get artifact metadata",
-                "description": "Gets the metadata for an artifact in the registry, based on the latest version. If the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used. The returned metadata includes\nboth generated (read-only) and editable metadata (such as name and description).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists  or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Gets the metadata for an artifact in the registry, based on the latest version. If the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used. The returned metadata includes\nboth generated (read-only) and editable metadata (such as name and description).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists  or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "5aa5tq5il6830"
+                }
             },
             "put": {
                 "requestBody": {
@@ -2906,7 +3098,10 @@
                 },
                 "operationId": "updateArtifactMetaData",
                 "summary": "Update artifact metadata",
-                "description": "Updates the editable parts of the artifact's metadata.  Not all metadata fields can\nbe updated.  For example, `createdOn` and `createdBy` are both read-only properties.\n\nThis operation can fail for the following reasons:\n\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+                "description": "Updates the editable parts of the artifact's metadata.  Not all metadata fields can\nbe updated.  For example, `createdOn` and `createdBy` are both read-only properties.\n\nThis operation can fail for the following reasons:\n\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+                "x-stoplight": {
+                    "id": "9k8k6eb5kkt5i"
+                }
             },
             "post": {
                 "requestBody": {
@@ -3018,7 +3213,10 @@
                 },
                 "operationId": "getArtifactVersionMetaDataByContent",
                 "summary": "Get artifact version metadata by content",
-                "description": "Gets the metadata for an artifact that matches the raw content.  Searches the registry\nfor a version of the given artifact matching the content provided in the body of the\nPOST.\n\nThis operation can fail for the following reasons:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* No artifact version matching the provided content exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Gets the metadata for an artifact that matches the raw content.  Searches the registry\nfor a version of the given artifact matching the content provided in the body of the\nPOST.\n\nThis operation can fail for the following reasons:\n\n* Provided content (request body) was empty (HTTP error `400`)\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* No artifact version matching the provided content exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "o3biyp8nh3fne"
+                }
             },
             "parameters": [
                 {
@@ -3070,7 +3268,10 @@
                 },
                 "operationId": "getArtifactVersionComments",
                 "summary": "Get artifact version comments",
-                "description": "Retrieves all comments for a version of an artifact.  Both the `artifactId` and the\nunique `version` number must be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Retrieves all comments for a version of an artifact.  Both the `artifactId` and the\nunique `version` number must be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "uu43vswvtizms"
+                }
             },
             "post": {
                 "requestBody": {
@@ -3106,7 +3307,10 @@
                 },
                 "operationId": "addArtifactVersionComment",
                 "summary": "Add new comment",
-                "description": "Adds a new comment to the artifact version.  Both the `artifactId` and the\nunique `version` number must be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Adds a new comment to the artifact version.  Both the `artifactId` and the\nunique `version` number must be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "xx8qc1jhi9oy4"
+                }
             },
             "parameters": [
                 {
@@ -3167,7 +3371,10 @@
                 },
                 "operationId": "updateArtifactVersionComment",
                 "summary": "Update a comment",
-                "description": "Updates the value of a single comment in an artifact version.  Only the owner of the\ncomment can modify it.  The `artifactId`, unique `version` number, and `commentId` \nmust be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* No comment with this `commentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Updates the value of a single comment in an artifact version.  Only the owner of the\ncomment can modify it.  The `artifactId`, unique `version` number, and `commentId` \nmust be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* No comment with this `commentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "ova3nawnw6z7a"
+                }
             },
             "delete": {
                 "tags": [
@@ -3186,7 +3393,10 @@
                 },
                 "operationId": "deleteArtifactVersionComment",
                 "summary": "Delete a single comment",
-                "description": "Deletes a single comment in an artifact version.  Only the owner of the\ncomment can delete it.  The `artifactId`, unique `version` number, and `commentId` \nmust be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* No comment with this `commentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+                "description": "Deletes a single comment in an artifact version.  Only the owner of the\ncomment can delete it.  The `artifactId`, unique `version` number, and `commentId` \nmust be provided.\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* No comment with this `commentId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n",
+                "x-stoplight": {
+                    "id": "fnio6ol8twk0y"
+                }
             },
             "parameters": [
                 {
@@ -3265,6 +3475,9 @@
                         "custom-1": "foo",
                         "custom-2": "bar"
                     }
+                },
+                "x-stoplight": {
+                    "id": "b3zfyyqdy7dyy"
                 }
             },
             "Rule": {
@@ -3285,6 +3498,9 @@
                 "example": {
                     "type": "VALIDITY",
                     "config": "FULL"
+                },
+                "x-stoplight": {
+                    "id": "1608seujxiqjj"
                 }
             },
             "Error": {
@@ -3313,6 +3529,9 @@
                 "example": {
                     "error_code": 500,
                     "message": "An error occurred somewhere."
+                },
+                "x-stoplight": {
+                    "id": "pwtjdy6x6fbna"
                 }
             },
             "RuleType": {
@@ -3324,13 +3543,19 @@
                 ],
                 "type": "string",
                 "example": "VALIDITY",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "5w33r35vrhuw5"
+                }
             },
             "ArtifactType": {
                 "description": "",
                 "type": "string",
                 "example": "AVRO",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "cq0vk009udedn"
+                }
             },
             "ArtifactTypeInfo": {
                 "description": "",
@@ -3342,6 +3567,9 @@
                 },
                 "example": {
                     "name": "AVRO"
+                },
+                "x-stoplight": {
+                    "id": "gu3u1r1i3lu7k"
                 }
             },
             "UpdateState": {
@@ -3358,6 +3586,9 @@
                 },
                 "example": {
                     "state": "DISABLED"
+                },
+                "x-stoplight": {
+                    "id": "eq700vlu9mqz2"
                 }
             },
             "ArtifactState": {
@@ -3368,7 +3599,10 @@
                     "DEPRECATED"
                 ],
                 "type": "string",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "dm0r7d0fawt81"
+                }
             },
             "ArtifactSearchResults": {
                 "description": "Describes the response received when searching for artifacts.",
@@ -3389,6 +3623,9 @@
                         "description": "The total number of artifacts that matched the query that produced the result set (may be \nmore than the number of artifacts in the result set).",
                         "type": "integer"
                     }
+                },
+                "x-stoplight": {
+                    "id": "nnjua2562w2pe"
                 }
             },
             "SortOrder": {
@@ -3397,7 +3634,10 @@
                     "asc",
                     "desc"
                 ],
-                "type": "string"
+                "type": "string",
+                "x-stoplight": {
+                    "id": "x6vgprckgksxh"
+                }
             },
             "VersionSearchResults": {
                 "description": "Describes the response received when searching for artifacts.",
@@ -3418,6 +3658,9 @@
                             "$ref": "#/components/schemas/SearchedVersion"
                         }
                     }
+                },
+                "x-stoplight": {
+                    "id": "ex7g37ngycqul"
                 }
             },
             "RuleViolationCause": {
@@ -3435,22 +3678,34 @@
                 "example": {
                     "description": "External documentation URL is not valid (it must be formatted as a URL).",
                     "context": "/info/externalDocs[url]"
+                },
+                "x-stoplight": {
+                    "id": "k9tx2lda7vm08"
                 }
             },
             "GroupId": {
                 "description": "An ID of a single artifact group.",
                 "type": "string",
-                "example": "\"my-group\""
+                "example": "\"my-group\"",
+                "x-stoplight": {
+                    "id": "s0ryizs9v11p3"
+                }
             },
             "ArtifactId": {
                 "description": "The ID of a single artifact.",
                 "type": "string",
-                "example": "\"example-artifact\""
+                "example": "\"example-artifact\"",
+                "x-stoplight": {
+                    "id": "7dgznh4wc3xz3"
+                }
             },
             "Version": {
                 "description": "A single version of an artifact.  Can be provided by the client when creating a new version,\nor it can be server-generated.  The value can be any string unique to the artifact, but it is\nrecommended to use a simple integer or a semver value.",
                 "type": "string",
-                "example": "\"3.1.6\""
+                "example": "\"3.1.6\"",
+                "x-stoplight": {
+                    "id": "nmr0ub33onys8"
+                }
             },
             "LogConfiguration": {
                 "description": "",
@@ -3463,6 +3718,9 @@
                         "$ref": "#/components/schemas/LogLevel",
                         "description": ""
                     }
+                },
+                "x-stoplight": {
+                    "id": "imjcs4nqk9417"
                 }
             },
             "NamedLogConfiguration": {
@@ -3484,7 +3742,10 @@
                     {
                         "$ref": "#/components/schemas/LogConfiguration"
                     }
-                ]
+                ],
+                "x-stoplight": {
+                    "id": "mrzcsqbwp2k36"
+                }
             },
             "Properties": {
                 "description": "User-defined name-value pairs. Name and value must be strings.",
@@ -3493,7 +3754,10 @@
                     "type": "string"
                 },
                 "x-codegen-inline": true,
-                "x-codegen-type": "StringMap"
+                "x-codegen-type": "StringMap",
+                "x-stoplight": {
+                    "id": "6wcsd3se7l5fj"
+                }
             },
             "IfExists": {
                 "description": "",
@@ -3503,7 +3767,10 @@
                     "RETURN",
                     "RETURN_OR_UPDATE"
                 ],
-                "type": "string"
+                "type": "string",
+                "x-stoplight": {
+                    "id": "5l6wanca0njkl"
+                }
             },
             "SortBy": {
                 "description": "",
@@ -3511,7 +3778,10 @@
                     "name",
                     "createdOn"
                 ],
-                "type": "string"
+                "type": "string",
+                "x-stoplight": {
+                    "id": "co6eygoxmlopq"
+                }
             },
             "LogLevel": {
                 "description": "",
@@ -3529,7 +3799,10 @@
                     "FINEST"
                 ],
                 "type": "string",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "2wk9eldwwqk6p"
+                }
             },
             "SystemInfo": {
                 "title": "Root Type for SystemInfo",
@@ -3555,12 +3828,18 @@
                     "description": "The Apicurio Registry application.",
                     "version": "2.0.0.Final",
                     "builtOn": "2021-03-19T12:55:00Z"
+                },
+                "x-stoplight": {
+                    "id": "zw6yscsnwn6qe"
                 }
             },
             "FileContent": {
                 "format": "binary",
                 "type": "string",
-                "x-codegen-inline": true
+                "x-codegen-inline": true,
+                "x-stoplight": {
+                    "id": "biktuwb3pllzg"
+                }
             },
             "RoleMapping": {
                 "description": "The mapping between a user/principal and their role.",
@@ -3587,6 +3866,9 @@
                     "principalId": "svc_account_84874587_123484",
                     "principalName": "famartin-svc-account",
                     "role": "READ_ONLY"
+                },
+                "x-stoplight": {
+                    "id": "d5rn2so8ftkr6"
                 }
             },
             "RoleType": {
@@ -3597,7 +3879,10 @@
                     "ADMIN"
                 ],
                 "type": "string",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "koflgqk4brm2w"
+                }
             },
             "UpdateRole": {
                 "title": "Root Type for UpdateRole",
@@ -3613,6 +3898,9 @@
                 },
                 "example": {
                     "role": "READ_ONLY"
+                },
+                "x-stoplight": {
+                    "id": "y4wyucs7wq1y0"
                 }
             },
             "UserInfo": {
@@ -3642,31 +3930,46 @@
                     "admin": true,
                     "developer": false,
                     "viewer": false
+                },
+                "x-stoplight": {
+                    "id": "r9anhtfrysa1n"
                 }
             },
             "EncodedArtifactName": {
                 "description": "Base64 encoded name of the artifact.",
                 "type": "string",
                 "example": "\"QXJ0aWZhY3QgbmFtZQo=\"",
-                "x-codegen-inline": true
+                "x-codegen-inline": true,
+                "x-stoplight": {
+                    "id": "ruumvhdeyknf2"
+                }
             },
             "EncodedArtifactDescription": {
                 "description": "Base64 encoded description of the artifact.",
                 "type": "string",
                 "example": "\"QXJ0aWZhY3QgZGVzY3JpcHRpb24K\"",
-                "x-codegen-inline": true
+                "x-codegen-inline": true,
+                "x-stoplight": {
+                    "id": "ilmcavkitx83p"
+                }
             },
             "ArtifactName": {
                 "description": "Name of the artifact.",
                 "type": "string",
                 "example": "\"Artifact name\"",
-                "x-codegen-inline": true
+                "x-codegen-inline": true,
+                "x-stoplight": {
+                    "id": "dux21u41b9mbp"
+                }
             },
             "ArtifactDescription": {
                 "description": "Description of the artifact.",
                 "type": "string",
                 "example": "\"Artifact description\"",
-                "x-codegen-inline": true
+                "x-codegen-inline": true,
+                "x-stoplight": {
+                    "id": "i6qbeij14mvzj"
+                }
             },
             "DownloadRef": {
                 "title": "Root Type for Download",
@@ -3686,6 +3989,9 @@
                 "example": {
                     "downloadId": "247-4987490-297845",
                     "href": "https://54321.registry.examples.org/apis/registry/v2/downloads/247-4987490-297845"
+                },
+                "x-stoplight": {
+                    "id": "fakqqcf3bnwz1"
                 }
             },
             "ArtifactMetaData": {
@@ -3804,6 +4110,9 @@
                             "name": "foo.bar.Open"
                         }
                     ]
+                },
+                "x-stoplight": {
+                    "id": "233hln1j9iaak"
                 }
             },
             "SearchedArtifact": {
@@ -3881,6 +4190,9 @@
                     "state": "ENABLED",
                     "createdBy": "user1",
                     "createdOn": "2019-03-22T12:51:19Z"
+                },
+                "x-stoplight": {
+                    "id": "muny9bp89rrda"
                 }
             },
             "VersionMetaData": {
@@ -3978,6 +4290,9 @@
                             "name": "foo.bar.Open"
                         }
                     ]
+                },
+                "x-stoplight": {
+                    "id": "3mlk3wrwyvvwo"
                 }
             },
             "SearchedVersion": {
@@ -4068,6 +4383,9 @@
                     "properties": {},
                     "contentId": 62,
                     "references": {}
+                },
+                "x-stoplight": {
+                    "id": "64nd477mnw9sa"
                 }
             },
             "RuleViolationError": {
@@ -4108,7 +4426,10 @@
                         }
                     ]
                 },
-                "x-codegen-extendsClass": "io.apicurio.registry.rest.v2.beans.Error"
+                "x-codegen-extendsClass": "io.apicurio.registry.rest.v2.beans.Error",
+                "x-stoplight": {
+                    "id": "k2byjye2sr5af"
+                }
             },
             "ArtifactReference": {
                 "title": "Root Type for ArtifactReference",
@@ -4138,6 +4459,9 @@
                     "artifactId": "13842090-2ce3-11ec-8d3d-0242ac130003",
                     "version": "2",
                     "name": "foo.bar.Open"
+                },
+                "x-stoplight": {
+                    "id": "4maoluuuscsz4"
                 }
             },
             "ConfigurationProperty": {
@@ -4177,6 +4501,9 @@
                     "type": "boolean",
                     "label": "Owner Only Authorization",
                     "description": "When enabled, the registry will allow only the artifact owner (creator) to modify an artifact."
+                },
+                "x-stoplight": {
+                    "id": "go6ibp1s79o13"
                 }
             },
             "UpdateConfigurationProperty": {
@@ -4193,6 +4520,9 @@
                 },
                 "example": {
                     "value": "true"
+                },
+                "x-stoplight": {
+                    "id": "iouacxfz1r47f"
                 }
             },
             "Limits": {
@@ -4262,6 +4592,9 @@
                     "maxArtifactNameLengthChars": -1,
                     "maxArtifactDescriptionLengthChars": -1,
                     "maxRequestsPerSecondCount": -1
+                },
+                "x-stoplight": {
+                    "id": "vk32v7x6pukve"
                 }
             },
             "ArtifactOwner": {
@@ -4275,6 +4608,9 @@
                 },
                 "example": {
                     "owner": "bwayne"
+                },
+                "x-stoplight": {
+                    "id": "kef13f4tm8851"
                 }
             },
             "SearchedGroup": {
@@ -4324,6 +4660,9 @@
                     "createdOn": "2019-03-22T12:51:19Z",
                     "modifiedBy": "user1",
                     "modifiedOn": "2019-03-22T12:51:19Z"
+                },
+                "x-stoplight": {
+                    "id": "y50m52tx1de0s"
                 }
             },
             "GroupMetaData": {
@@ -4378,6 +4717,9 @@
                         "custom-1": "foo",
                         "custom-2": "bar"
                     }
+                },
+                "x-stoplight": {
+                    "id": "c12qcep2kfyo0"
                 }
             },
             "GroupSearchResults": {
@@ -4399,6 +4741,9 @@
                         "description": "The total number of groups that matched the query that produced the result set (may be \nmore than the number of groups in the result set).",
                         "type": "integer"
                     }
+                },
+                "x-stoplight": {
+                    "id": "85ehinbl8k11o"
                 }
             },
             "CreateGroupMetaData": {
@@ -4428,20 +4773,20 @@
                         "custom-1": "foo",
                         "custom-2": "bar"
                     }
+                },
+                "x-stoplight": {
+                    "id": "h74vlsaf7rm88"
                 }
             },
             "ArtifactContent": {
-                "description": "",
-                "required": [
-                    "content",
-                    "references"
-                ],
                 "type": "object",
+                "x-stoplight": {
+                    "id": "8uuj2y7asqeo0"
+                },
                 "properties": {
                     "content": {
                         "description": "Raw content of the artifact or a valid (and accessible) URL where the content can be found.",
-                        "type": "string",
-                        "example": ""
+                        "type": "string"
                     },
                     "references": {
                         "description": "Collection of references to other artifacts.",
@@ -4449,8 +4794,16 @@
                         "items": {
                             "$ref": "#/components/schemas/ArtifactReference"
                         }
+                    },
+                    "markdownContent": {
+                        "$ref": "#/components/schemas/MarkdownContent"
                     }
-                }
+                },
+                "required": [
+                    "content",
+                    "references"
+                ],
+                "title": ""
             },
             "ReferenceType": {
                 "description": "",
@@ -4460,7 +4813,10 @@
                 ],
                 "type": "string",
                 "example": "\"INBOUND\"",
-                "x-codegen-package": "io.apicurio.registry.types"
+                "x-codegen-package": "io.apicurio.registry.types",
+                "x-stoplight": {
+                    "id": "2vmpw9y3xgmt4"
+                }
             },
             "NewComment": {
                 "title": "Root Type for NewComment",
@@ -4476,6 +4832,9 @@
                 },
                 "example": {
                     "value": "This is a new comment on an existing artifact version."
+                },
+                "x-stoplight": {
+                    "id": "gwngcj23be6et"
                 }
             },
             "Comment": {
@@ -4511,7 +4870,40 @@
                     "value": "This is a comment on an artifact version.",
                     "createdBy": "bwayne",
                     "createdOn": "2023-07-01T15:22:01Z"
+                },
+                "x-stoplight": {
+                    "id": "7ogegzu58j3d1"
                 }
+            },
+            "MarkdownContent": {
+                "title": "MarkdownContent",
+                "x-stoplight": {
+                    "id": "e96j81dlqgzuf"
+                },
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "x-stoplight": {
+                            "id": "lrxbc5qgpxj8o"
+                        }
+                    },
+                    "name": {
+                        "type": "string",
+                        "x-stoplight": {
+                            "id": "asmejwn2ehgkk"
+                        }
+                    },
+                    "content": {
+                        "type": "string",
+                        "x-stoplight": {
+                            "id": "67cl7ohvi9h3s"
+                        }
+                    }
+                },
+                "required": [
+                    "content"
+                ]
             }
         },
         "responses": {

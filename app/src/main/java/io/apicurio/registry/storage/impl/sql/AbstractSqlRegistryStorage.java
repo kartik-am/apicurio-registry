@@ -764,6 +764,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         }
 
         // Put the content in the DB and get the unique content ID back.
+        //Kajal - along with the content and references, put the markdownContent as well *******
         long contentId = handles.withHandleNoException(handle -> {
             return createOrUpdateContent(handle, artifactType, content, references);
         });
