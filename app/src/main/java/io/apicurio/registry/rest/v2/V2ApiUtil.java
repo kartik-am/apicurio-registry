@@ -95,6 +95,9 @@ public final class V2ApiUtil {
         metaData.setReferences(Optional.ofNullable(dto.getReferences()).stream()
                 .flatMap(references -> references.stream().map(V2ApiUtil::referenceDtoToReference))
                 .collect(Collectors.toList()));
+        metaData.setOwner(dto.getOwner());
+        metaData.setApprovalStatus(dto.getApprovalStatus());
+        metaData.setCategory(dto.getCategory());
         return metaData;
     }
 

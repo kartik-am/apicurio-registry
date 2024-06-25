@@ -16,6 +16,9 @@
 
 package io.apicurio.registry.storage.impl.sql.mappers;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+//import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.storage.dto.ArtifactVersionMetaDataDto;
 import io.apicurio.registry.storage.impl.sql.RegistryContentUtils;
 import io.apicurio.registry.storage.impl.sql.jdb.RowMapper;
@@ -56,6 +59,10 @@ public class ArtifactVersionMetaDataDtoMapper implements RowMapper<ArtifactVersi
         dto.setType(rs.getString("type"));
         dto.setLabels(RegistryContentUtils.deserializeLabels(rs.getString("labels")));
         dto.setProperties(RegistryContentUtils.deserializeProperties(rs.getString("properties")));
+        dto.setOwner(rs.getString("owner"));
+        dto.setApprovalStatus(ApprovalState.valueOf(rs.getString("approvalState")));
+        dto.setCategory(ArtifactCategory.valueOf(rs.getString("artifactCategory")));
+
         return dto;
     }
 

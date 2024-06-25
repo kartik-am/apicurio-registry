@@ -19,6 +19,8 @@ package io.apicurio.registry.storage.dto;
 import java.util.List;
 import java.util.Map;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.types.ArtifactState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +48,25 @@ public class ArtifactVersionMetaDataDto {
     private ArtifactState state;
     private List<String> labels;
     private Map<String, String> properties;
+    private String owner;
+    private ApprovalState approvalStatus;
+    private ArtifactCategory category;
+
+
+    public ArtifactVersionMetaDataDto(String version, int versionId, long globalId, long contentId, String name, String description, String createdBy, long createdOn, String type, ArtifactState state, List<String> labels, Map<String, String> properties) {
+        this.version = version;
+        this.versionId = versionId;
+        this.globalId = globalId;
+        this.contentId = contentId;
+        this.name = name;
+        this.description = description;
+        this.createdBy = createdBy;
+        this.createdOn = createdOn;
+        this.type = type;
+        this.state = state;
+        this.labels = labels;
+        this.properties = properties;
+    }
 
     /**
      * Constructor.
@@ -219,5 +240,29 @@ public class ArtifactVersionMetaDataDto {
      */
     public void setVersionId(int versionId) {
         this.versionId = versionId;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public ApprovalState getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(ApprovalState approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public ArtifactCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ArtifactCategory category) {
+        this.category = category;
     }
 }

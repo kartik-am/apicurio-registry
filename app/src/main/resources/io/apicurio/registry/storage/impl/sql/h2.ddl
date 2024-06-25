@@ -27,7 +27,7 @@ ALTER TABLE content ADD CONSTRAINT UNQ_content_1 UNIQUE (tenantId, contentHash);
 CREATE HASH INDEX IDX_content_1 ON content(canonicalHash);
 CREATE HASH INDEX IDX_content_2 ON content(contentHash);
 
-CREATE TABLE versions (globalId BIGINT NOT NULL, tenantId VARCHAR(128) NOT NULL, groupId VARCHAR(512) NOT NULL, artifactId VARCHAR(512) NOT NULL, version VARCHAR(256), versionId INT NOT NULL, state VARCHAR(64) NOT NULL, name VARCHAR(512), description VARCHAR(1024), createdBy VARCHAR(256), createdOn TIMESTAMP WITHOUT TIME ZONE NOT NULL, labels TEXT, properties TEXT, contentId BIGINT NOT NULL);
+CREATE TABLE versions (globalId BIGINT NOT NULL, tenantId VARCHAR(128) NOT NULL, groupId VARCHAR(512) NOT NULL, artifactId VARCHAR(512) NOT NULL, version VARCHAR(256), versionId INT NOT NULL, state VARCHAR(64) NOT NULL, name VARCHAR(512), description VARCHAR(1024), createdBy VARCHAR(256), createdOn TIMESTAMP WITHOUT TIME ZONE NOT NULL, labels TEXT, properties TEXT, contentId BIGINT NOT NULL, owner VARCHAR(512), approvalState VARCHAR(64), artifactCategory VARCHAR(64));
 ALTER TABLE versions ADD PRIMARY KEY (tenantId, globalId);
 ALTER TABLE versions ADD CONSTRAINT UQ_versions_1 UNIQUE (tenantId, groupId, artifactId, version);
 ALTER TABLE versions ADD CONSTRAINT FK_versions_1 FOREIGN KEY (tenantId, groupId, artifactId) REFERENCES artifacts(tenantId, groupId, artifactId);
@@ -39,6 +39,10 @@ CREATE INDEX IDX_versions_4 ON versions(description);
 CREATE HASH INDEX IDX_versions_5 ON versions(createdBy);
 CREATE INDEX IDX_versions_6 ON versions(createdOn);
 CREATE HASH INDEX IDX_versions_7 ON versions(contentId);
+CREATE INDEX IDX_versions_8 ON versions(owner);
+CREATE INDEX IDX_versions_9 ON versions(approvalState);
+CREATE INDEX IDX_versions_10 ON versions(artifactCategory);
+
 
 CREATE TABLE properties (tenantId VARCHAR(128) NOT NULL, globalId BIGINT NOT NULL, pkey VARCHAR(256) NOT NULL, pvalue VARCHAR(1024));
 ALTER TABLE properties ADD CONSTRAINT FK_props_1 FOREIGN KEY (tenantId, globalId) REFERENCES versions(tenantId, globalId);

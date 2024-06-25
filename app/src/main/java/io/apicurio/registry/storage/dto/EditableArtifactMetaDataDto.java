@@ -46,6 +46,7 @@ public class EditableArtifactMetaDataDto {
     private String owner;
     private ApprovalState approvalStatus;
     private ArtifactCategory category;
+    private Boolean additionalMetaData =false;
 
     /**
      * Constructor.
@@ -56,6 +57,17 @@ public class EditableArtifactMetaDataDto {
     /*
     * Created a constructor
     * */
+
+
+    public EditableArtifactMetaDataDto(String name, String description, List<String> labels, Map<String, String> properties, String owner, ApprovalState approvalStatus, ArtifactCategory category) {
+        this.name = name;
+        this.description = description;
+        this.labels = labels;
+        this.properties = properties;
+        this.owner = owner;
+        this.approvalStatus = approvalStatus;
+        this.category = category;
+    }
 
     public EditableArtifactMetaDataDto(String name, String description, List<String> labels, Map<String, String> properties) {
         this.name = name;
@@ -142,6 +154,14 @@ public class EditableArtifactMetaDataDto {
 
     public void setCategory(ArtifactCategory category) {
         this.category = category;
+    }
+
+    public Boolean hasAdditionalMetaData() {
+        return additionalMetaData;
+    }
+
+    public void setHasAdditionalMetaData(Boolean additionalMetaData) {
+        this.additionalMetaData = additionalMetaData;
     }
 }
 

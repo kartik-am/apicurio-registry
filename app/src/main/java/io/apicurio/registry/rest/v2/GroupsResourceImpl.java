@@ -962,6 +962,7 @@ public class GroupsResourceImpl implements GroupsResource {
             EditableArtifactMetaDataDto metaData;
             if(additionalMetaData != null) {
                 metaData = getEditableMetaDataWithAdditionalDetails(artifactName, artifactDescription, additionalMetaData);
+                metaData.setHasAdditionalMetaData(true);
             } else {
                 metaData = getEditableMetaData(artifactName, artifactDescription);
             }
@@ -1183,9 +1184,8 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     private EditableArtifactMetaDataDto getEditableMetaDataWithAdditionalDetails(String name, String description, ArtifactAdditionalMetaData additionalMetaData) {
-        if (name != null || description != null) {
-            ApprovalState approvalState = ApprovalState.DRAFT;
-            return new EditableArtifactMetaDataDto(name, description, null, null, additionalMetaData.getOwner(), approvalState, additionalMetaData.getCategory());
+        if (name != null || description != null || additionalMetaData != null) {
+            return new EditableArtifactMetaDataDto(name, description, null, null, additionalMetaData.getOwner(), additionalMetaData.getApprovalStatus(), additionalMetaData.getCategory());
         }
         return null;
     }
