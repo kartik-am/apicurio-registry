@@ -498,11 +498,15 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
      */
     private ArtifactVersionMetaDataDto createArtifactVersion(Handle handle, String artifactType,
                                                              boolean firstVersion, String groupId, String artifactId, String version, String name, String description, List<String> labels,
-                                                             Map<String, String> properties, String createdBy, Date createdOn, Long contentId, String owner, ArtifactCategory category,
+                                                             Map<String, String> properties, String createdBy, Date createdOn, Long contentId, String owner, ApprovalState approvalState, ArtifactCategory category,
                                                              IdGenerator globalIdGenerator) {
 
         ArtifactState state = ArtifactState.ENABLED;
-        ApprovalState approvalState = ApprovalState.DRAFT;
+
+        if(approvalState == null) {
+            approvalState = ApprovalState.DRAFT;
+        }
+
         if (category == null) {
             category = ArtifactCategory.PRIVATE;
         }
@@ -788,6 +792,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             md = extractMetaDataWithAdditionalMetadata(artifactType, content, md);
         }
 
+
         // This current method is skipped in KafkaSQL, and the one below is called directly,
         // so references must be added to the metadata there.
         return createArtifactWithMetadata(groupId, artifactId, version, artifactType, contentId, createdBy, createdOn, md, globalIdGenerator);
@@ -815,13 +820,12 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 if(metaData.hasAdditionalMetaData()) {
                     vmdd = this.createArtifactVersion(handle, artifactType, true, groupId, artifactId, version,
                             metaData.getName(), metaData.getDescription(), metaData.getLabels(), metaData.getProperties(), createdBy, createdOn,
-                            contentId, metaData.getOwner(), metaData.getCategory(), globalIdGenerator);
+                            contentId, metaData.getOwner(), null, metaData.getCategory(), globalIdGenerator);
                 } else {
                     vmdd = this.createArtifactVersion(handle, artifactType, true, groupId, artifactId, version,
                             metaData.getName(), metaData.getDescription(), metaData.getLabels(), metaData.getProperties(), createdBy, createdOn,
-                            contentId,null, null, globalIdGenerator);
+                            contentId,null, null,  null, globalIdGenerator);
                 }
-
                 // Get the content so we can return references in the metadata
                 ContentAndReferencesDto contentAndReferences = getArtifactByContentId(contentId);
 
@@ -1075,12 +1079,17 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         });
 
         // Extract meta-data from the content if no metadata is provided
-        if (metaData == null) {
-            metaData = extractMetaData(artifactType, content);
+//        if (metaData == null) {
+//            metaData = extractMetaData(artifactType, content);
+//        }
+        EditableArtifactMetaDataDto md = metaData;
+        //Updating for additonal Metadata
+        if (md == null || md.getName() == null || md.getDescription() == null || md.getLabels() == null || md.getProperties() == null) {
+            md = extractMetaDataWithAdditionalMetadata(artifactType, content, md);
         }
 
         return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, contentId, createdBy, createdOn,
-                metaData, globalIdGenerator);
+                md, globalIdGenerator);
     }
 
     protected ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId, String version,
@@ -1101,6 +1110,9 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 String description = latest.getDescription();
                 List<String> labels = latest.getLabels();
                 Map<String, String> properties = latest.getProperties();
+                String owner = latest.getOwner();
+                ArtifactCategory category = latest.getCategory();
+                ApprovalState approvalState = latest.getApprovalStatus();
 
                 // Provided metadata will override inherited values from latest version
                 if (metaData.getName() != null) {
@@ -1115,10 +1127,19 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 if (metaData.getProperties() != null) {
                     properties = metaData.getProperties();
                 }
+                if (metaData.getOwner() != null) {
+                    owner = metaData.getOwner();
+                }
+                if (metaData.getCategory() != null) {
+                    category = metaData.getCategory();
+                }
+                if (metaData.getApprovalStatus() != null) {
+                    approvalState = metaData.getApprovalStatus();
+                }
 
                 // Now create the version and return the new version metadata.
                 ArtifactVersionMetaDataDto versionDto = this.createArtifactVersion(handle, artifactType, false, groupId, artifactId, version,
-                        name, description, labels, properties, createdBy, createdOn, contentId, null, null,  globalIdGenerator);
+                        name, description, labels, properties, createdBy, createdOn, contentId, owner, approvalState, category,  globalIdGenerator);
                 ArtifactMetaDataDto dto = versionToArtifactDto(groupId, artifactId, versionDto);
                 dto.setCreatedOn(latest.getCreatedOn());
                 dto.setCreatedBy(latest.getCreatedBy());
@@ -1498,8 +1519,17 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
     public void updateArtifactMetaData(String groupId, String artifactId, EditableArtifactMetaDataDto metaData)
             throws ArtifactNotFoundException, RegistryStorageException {
         log.debug("Updating meta-data for an artifact: {} {}", groupId, artifactId);
-
         ArtifactMetaDataDto dto = this.getLatestArtifactMetaDataInternal(groupId, artifactId, storageBehaviorProps.getDefaultArtifactRetrievalBehavior());
+
+        if(metaData.getOwner() == null) {
+            metaData.setOwner(dto.getOwner());
+        }
+        if (metaData.getCategory() == null) {
+            metaData.setCategory(dto.getCategory());
+        }
+        if (metaData.getApprovalStatus() == null) {
+            metaData.setApprovalStatus(dto.getApprovalStatus());
+        }
 
         internalUpdateArtifactVersionMetadata(dto.getGlobalId(), groupId, artifactId, dto.getVersion(), metaData);
     }
@@ -2047,6 +2077,16 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
 
         ArtifactVersionMetaDataDto dto = this.getArtifactVersionMetaDataInternal(groupId, artifactId, version);
 
+        if(metaData.getOwner() == null) {
+            metaData.setOwner(dto.getOwner());
+        }
+        if (metaData.getCategory() == null) {
+            metaData.setCategory(dto.getCategory());
+        }
+        if (metaData.getApprovalStatus() == null) {
+            metaData.setApprovalStatus(dto.getApprovalStatus());
+        }
+
         internalUpdateArtifactVersionMetadata(dto.getGlobalId(), groupId, artifactId, dto.getVersion(), metaData);
     }
 
@@ -2068,10 +2108,13 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         .bind(1, limitStr(metaData.getDescription(), 1024, true))
                         .bind(2, RegistryContentUtils.serializeLabels(metaData.getLabels()))
                         .bind(3, RegistryContentUtils.serializeProperties(metaData.getProperties()))
-                        .bind(4, tenantContext.tenantId())
-                        .bind(5, normalizeGroupId(groupId))
-                        .bind(6, artifactId)
-                        .bind(7, version)
+                        .bind(4, limitStr(metaData.getOwner(), 512))
+                        .bind(5, metaData.getApprovalStatus())
+                        .bind(6, metaData.getCategory())
+                        .bind(7, tenantContext.tenantId())
+                        .bind(8, normalizeGroupId(groupId))
+                        .bind(9, artifactId)
+                        .bind(10, version)
                         .execute();
                 if (rowCount == 0) {
                     throw new VersionNotFoundException(groupId, artifactId, version);
@@ -3888,6 +3931,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             metaData.setOwner(metaDataDto.getOwner());
             metaData.setApprovalStatus(metaDataDto.getApprovalStatus());
             metaData.setCategory(metaDataDto.getCategory());
+            metaData.setHasAdditionalMetaData(true);
         }
         return metaData;
     }

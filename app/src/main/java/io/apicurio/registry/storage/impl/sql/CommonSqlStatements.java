@@ -305,7 +305,7 @@ public abstract class CommonSqlStatements implements SqlStatements {
      */
     @Override
     public String selectLatestArtifactMetaData() {
-        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn "
+        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn, v.owner, v.approvalState, v.artifactCategory "
                 + "FROM artifacts a "
                 + "JOIN versions v ON a.tenantId = v.tenantId AND a.latest = v.globalId "
                 + "WHERE a.tenantId = ? AND a.groupId = ? AND a.artifactId = ?";
@@ -316,7 +316,7 @@ public abstract class CommonSqlStatements implements SqlStatements {
      */
     @Override
     public String selectLatestArtifactMetaDataSkipDisabledState() {
-        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn "
+        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn, v.owner, v.approvalState, v.artifactCategory "
                 + "FROM artifacts a "
                 + "JOIN versions v ON a.tenantId = v.tenantId AND a.latest = v.globalId "
                 + "WHERE a.tenantId = ? AND a.groupId = ? AND a.artifactId = ? AND v.state != 'DISABLED'";
@@ -328,7 +328,7 @@ public abstract class CommonSqlStatements implements SqlStatements {
                 + "FROM versions v "
                 + "WHERE v.tenantId = ? AND v.groupId = ? AND v.artifactId = ? AND v.state != 'DISABLED'";
 
-        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn "
+        return "SELECT a.*, v.contentId, v.globalId, v.version, v.versionId, v.state, v.name, v.description, v.labels, v.properties, v.createdBy AS modifiedBy, v.createdOn AS modifiedOn, v.owner, v.approvalState, v.artifactCategory "
                 + "FROM artifacts a "
                 + "JOIN versions v ON a.tenantId = v.tenantId AND a.groupId = v.groupId AND a.artifactId = v.artifactId "
                 + "WHERE a.tenantId = ? AND a.groupId = ? AND a.artifactId = ? AND v.globalId IN (" + inner + ")";
@@ -413,7 +413,7 @@ public abstract class CommonSqlStatements implements SqlStatements {
      */
     @Override
     public String updateArtifactVersionMetaData() {
-        return "UPDATE versions SET name = ?, description = ?, labels = ?, properties = ? WHERE tenantId = ? AND groupId = ? AND artifactId = ? AND version = ?";
+        return "UPDATE versions SET name = ?, description = ?, labels = ?, properties = ?,  owner = ?, approvalState = ?, artifactCategory = ? WHERE tenantId = ? AND groupId = ? AND artifactId = ? AND version = ?";
     }
 
     /**

@@ -209,6 +209,9 @@ public final class V2ApiUtil {
         metaData.setState(dto.getState());
         metaData.setLabels(dto.getLabels());
         metaData.setProperties(dto.getProperties());
+        metaData.setOwner(dto.getOwner());
+        metaData.setApprovalStatus(dto.getApprovalStatus());
+        metaData.setCategory(dto.getCategory());
         return metaData;
     }
 

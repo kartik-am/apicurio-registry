@@ -195,7 +195,7 @@ public class GroupsResourceImpl implements GroupsResource {
     public ArtifactMetaData updateArtifact(String groupId, String artifactId, String xRegistryVersion,
                                            String xRegistryName, String xRegistryNameEncoded, String xRegistryDescription,
                                            String xRegistryDescriptionEncoded, InputStream data) {
-        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, data, Collections.emptyList());
+        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, data, Collections.emptyList(), null);
     }
 
     /**
@@ -208,7 +208,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                            String xRegistryName, String xRegistryNameEncoded, String xRegistryDescription,
                                            String xRegistryDescriptionEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, IoUtil.toStream(data.getContent()), data.getReferences());
+        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails());
     }
 
     /**
@@ -228,7 +228,7 @@ public class GroupsResourceImpl implements GroupsResource {
         }
     }
 
-    private ArtifactMetaData updateArtifactWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryNameEncoded, String xRegistryDescription, String xRegistryDescriptionEncoded, InputStream data, List<ArtifactReference> references) {
+    private ArtifactMetaData updateArtifactWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryNameEncoded, String xRegistryDescription, String xRegistryDescriptionEncoded, InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
 
         requireParameter("groupId", groupId);
         requireParameter("artifactId", artifactId);
@@ -243,7 +243,7 @@ public class GroupsResourceImpl implements GroupsResource {
         if (content.bytes().length == 0) {
             throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
         }
-        return updateArtifactInternal(groupId, artifactId, xRegistryVersion, artifactName, artifactDescription, content, getContentType(), references);
+        return updateArtifactInternal(groupId, artifactId, xRegistryVersion, artifactName, artifactDescription, content, getContentType(), references, additionalMetaData);
     }
 
     /**
@@ -291,6 +291,9 @@ public class GroupsResourceImpl implements GroupsResource {
         dto.setDescription(data.getDescription());
         dto.setLabels(data.getLabels());
         dto.setProperties(data.getProperties());
+        dto.setOwner(data.getOwner());
+        dto.setApprovalStatus(data.getApprovalStatus());
+        dto.setCategory(data.getCategory());
         storage.updateArtifactMetaData(defaultGroupIdToNull(groupId), artifactId, dto);
     }
 
@@ -632,6 +635,9 @@ public class GroupsResourceImpl implements GroupsResource {
         dto.setDescription(data.getDescription());
         dto.setLabels(data.getLabels());
         dto.setProperties(data.getProperties());
+        dto.setOwner(data.getOwner());
+        dto.setApprovalStatus(data.getApprovalStatus());
+        dto.setCategory(data.getCategory());
         storage.updateArtifactVersionMetaData(defaultGroupIdToNull(groupId), artifactId, version, dto);
     }
 
@@ -961,6 +967,7 @@ public class GroupsResourceImpl implements GroupsResource {
             final String finalArtifactId = artifactId;
             EditableArtifactMetaDataDto metaData;
             if(additionalMetaData != null) {
+
                 metaData = getEditableMetaDataWithAdditionalDetails(artifactName, artifactDescription, additionalMetaData);
                 metaData.setHasAdditionalMetaData(true);
             } else {
@@ -968,11 +975,10 @@ public class GroupsResourceImpl implements GroupsResource {
             }
 
 
-
             ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
             return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), finalArtifactId, artifactType, amd);
         } catch (ArtifactAlreadyExistsException ex) {
-            return handleIfExists(groupId, xRegistryArtifactId, xRegistryVersion, ifExists, artifactName, artifactDescription, content, ct, fcanonical, references);
+            return handleIfExists(groupId, xRegistryArtifactId, xRegistryVersion, ifExists, artifactName, artifactDescription, content, ct, fcanonical, references, additionalMetaData);
         }
     }
 
@@ -1124,7 +1130,7 @@ public class GroupsResourceImpl implements GroupsResource {
 
     private ArtifactMetaData handleIfExists(String groupId, String artifactId, String version, IfExists ifExists,
                                             String artifactName, String artifactDescription, ContentHandle content,
-                                            String contentType, boolean canonical, List<ArtifactReference> references) {
+                                            String contentType, boolean canonical, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
         final ArtifactMetaData artifactMetaData = getArtifactMetaData(groupId, artifactId);
         if (ifExists == null) {
             ifExists = IfExists.FAIL;
@@ -1132,11 +1138,11 @@ public class GroupsResourceImpl implements GroupsResource {
 
         switch (ifExists) {
             case UPDATE:
-                return updateArtifactInternal(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, references);
+                return updateArtifactInternal(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, references, additionalMetaData);
             case RETURN:
                 return artifactMetaData;
             case RETURN_OR_UPDATE:
-                return handleIfExistsReturnOrUpdate(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, canonical, references);
+                return handleIfExistsReturnOrUpdate(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, canonical, references, additionalMetaData);
             default:
                 throw new ArtifactAlreadyExistsException(groupId, artifactId);
         }
@@ -1144,7 +1150,7 @@ public class GroupsResourceImpl implements GroupsResource {
 
     private ArtifactMetaData handleIfExistsReturnOrUpdate(String groupId, String artifactId, String version,
                                                           String artifactName, String artifactDescription,
-                                                          ContentHandle content, String contentType, boolean canonical, List<ArtifactReference> references) {
+                                                          ContentHandle content, String contentType, boolean canonical, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
         try {
             ArtifactVersionMetaDataDto mdDto = this.storage.getArtifactVersionMetaData(defaultGroupIdToNull(groupId), artifactId, canonical, content, toReferenceDtos(references));
             ArtifactMetaData md = V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, null, mdDto);
@@ -1152,12 +1158,12 @@ public class GroupsResourceImpl implements GroupsResource {
         } catch (ArtifactNotFoundException nfe) {
             // This is OK - we'll update the artifact if there is no matching content already there.
         }
-        return updateArtifactInternal(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, references);
+        return updateArtifactInternal(groupId, artifactId, version, artifactName, artifactDescription, content, contentType, references, additionalMetaData);
     }
 
     private ArtifactMetaData updateArtifactInternal(String groupId, String artifactId, String version,
                                                     String name, String description,
-                                                    ContentHandle content, String contentType, List<ArtifactReference> references) {
+                                                    ContentHandle content, String contentType, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
 
         if (ContentTypeUtil.isApplicationYaml(contentType)) {
             content = ContentTypeUtil.yamlToJson(content);
@@ -1171,7 +1177,11 @@ public class GroupsResourceImpl implements GroupsResource {
         final Map<String, ContentHandle> resolvedReferences = RegistryContentUtils.recursivelyResolveReferences(referencesAsDtos, storage::getContentByReference);
 
         rulesService.applyRules(defaultGroupIdToNull(groupId), artifactId, artifactType, content, RuleApplicationType.UPDATE, references, resolvedReferences);
-        EditableArtifactMetaDataDto metaData = getEditableMetaData(name, description);
+//        EditableArtifactMetaDataDto metaData = getEditableMetaData(name, description);
+        EditableArtifactMetaDataDto metaData = getEditableMetaDataWithAdditionalDetails(name, description, additionalMetaData);
+        if(additionalMetaData != null) {
+            metaData.setHasAdditionalMetaData(true);
+        }
         ArtifactMetaDataDto dto = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, version, artifactType, content, metaData, referencesAsDtos);
         return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, dto);
     }
