@@ -2221,10 +2221,14 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         .bind(1, (String) null)
                         .bind(2, (String) null)
                         .bind(3, (String) null)
-                        .bind(4, tenantContext.tenantId())
-                        .bind(5, normalizeGroupId(groupId))
-                        .bind(6, artifactId)
-                        .bind(7, version)
+                        .bind(4, (String) null)
+//                        Instead of deleting by default DRAFT and PRIVATE will be set
+                        .bind(5, (String) ApprovalState.DRAFT.toString())
+                        .bind(6, (String) ArtifactCategory.PRIVATE.toString())
+                        .bind(7, tenantContext.tenantId())
+                        .bind(8, normalizeGroupId(groupId))
+                        .bind(9, artifactId)
+                        .bind(10, version)
                         .execute();
 
                 // Delete labels
