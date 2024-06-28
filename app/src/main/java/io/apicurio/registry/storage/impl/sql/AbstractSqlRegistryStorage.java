@@ -1110,9 +1110,10 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 String description = latest.getDescription();
                 List<String> labels = latest.getLabels();
                 Map<String, String> properties = latest.getProperties();
-                String owner = latest.getOwner();
-                ArtifactCategory category = latest.getCategory();
-                ApprovalState approvalState = latest.getApprovalStatus();
+//                For additonal Metadata default values will be provided if no addtional metadata is provided
+                String owner = null;
+                ArtifactCategory category = ArtifactCategory.PRIVATE;
+                ApprovalState approvalState = ApprovalState.DRAFT;
 
                 // Provided metadata will override inherited values from latest version
                 if (metaData.getName() != null) {

@@ -157,6 +157,9 @@ public final class V2ApiUtil {
         metaData.setState(dto.getState());
         metaData.setLabels(dto.getLabels());
         metaData.setProperties(dto.getProperties());
+        metaData.setOwner(dto.getOwner());
+        metaData.setApprovalStatus(dto.getApprovalStatus());
+        metaData.setCategory(dto.getCategory());
         return metaData;
     }
 
@@ -310,6 +313,9 @@ public final class V2ApiUtil {
             sv.setType(version.getType());
             sv.setProperties(version.getProperties());
             sv.setVersion(version.getVersion());
+            sv.setOwner(version.getOwner());
+            sv.setApprovalStatus(version.getApprovalStatus());
+            sv.setCategory(version.getCategory());
             results.getVersions().add(sv);
         });
         return results;

@@ -16,6 +16,8 @@
 
 package io.apicurio.registry.storage.impl.sql.mappers;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.storage.dto.SearchedVersionDto;
 import io.apicurio.registry.storage.impl.sql.RegistryContentUtils;
 import io.apicurio.registry.storage.impl.sql.jdb.RowMapper;
@@ -56,6 +58,9 @@ public class SearchedVersionMapper implements RowMapper<SearchedVersionDto> {
         dto.setProperties(RegistryContentUtils.deserializeProperties(rs.getString("properties")));
         dto.setType(rs.getString("type"));
         dto.setState(ArtifactState.valueOf(rs.getString("state")));
+        dto.setOwner(rs.getString("owner"));
+        dto.setApprovalStatus(ApprovalState.valueOf(rs.getString("approvalState")));
+        dto.setCategory(ArtifactCategory.valueOf(rs.getString("artifactCategory")));
         return dto;
     }
 

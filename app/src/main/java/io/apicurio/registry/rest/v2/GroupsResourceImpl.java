@@ -1012,7 +1012,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryVersion, String xRegistryName,
                                                  String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, InputStream data) {
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList());
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList(), null);
     }
 
     /**
@@ -1025,7 +1025,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences());
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails());
     }
 
     /**
@@ -1041,7 +1041,7 @@ public class GroupsResourceImpl implements GroupsResource {
      * @param data
      * @param references
      */
-    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references) {
+    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
         // TODO do something with the user-provided version info
         requireParameter("groupId", groupId);
         requireParameter("artifactId", artifactId);
@@ -1069,7 +1069,14 @@ public class GroupsResourceImpl implements GroupsResource {
 
         String artifactType = lookupArtifactType(groupId, artifactId);
         rulesService.applyRules(defaultGroupIdToNull(groupId), artifactId, artifactType, content, RuleApplicationType.UPDATE, references, resolvedReferences);
-        EditableArtifactMetaDataDto metaData = getEditableMetaData(artifactName, artifactDescription);
+        EditableArtifactMetaDataDto metaData;
+        if(additionalMetaData != null) {
+
+            metaData = getEditableMetaDataWithAdditionalDetails(artifactName, artifactDescription, additionalMetaData);
+            metaData.setHasAdditionalMetaData(true);
+        } else {
+            metaData = getEditableMetaData(artifactName, artifactDescription);
+        }
         ArtifactMetaDataDto amd = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
         return V2ApiUtil.dtoToVersionMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, amd);
     }

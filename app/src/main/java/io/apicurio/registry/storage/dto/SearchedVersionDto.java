@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.types.ArtifactState;
 
 /**
@@ -41,6 +43,9 @@ public class SearchedVersionDto {
     private long contentId;
     private String version;
     private int versionId;
+    private String owner;
+    private ApprovalState approvalStatus;
+    private ArtifactCategory category;
 
     /**
      * Constructor.
@@ -216,4 +221,27 @@ public class SearchedVersionDto {
         this.versionId = versionId;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public ApprovalState getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(ApprovalState approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public ArtifactCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ArtifactCategory category) {
+        this.category = category;
+    }
 }
