@@ -82,6 +82,19 @@ public class SearchFilter {
         return new SearchFilter(SearchFilterType.everything, value);
     }
 
+    public static SearchFilter ofOwner(String value) {
+        return new SearchFilter(SearchFilterType.owner, value);
+    }
+
+    public static SearchFilter ofApprovalStatus(String value) {
+        return new SearchFilter(SearchFilterType.approvalStatus, value);
+    }
+
+    public static SearchFilter ofCategory(String value) {
+        return new SearchFilter(SearchFilterType.category, value);
+    }
+
+
     @SuppressWarnings("unchecked")
     public Pair<String, String> getPropertyFilterValue() {
         if (value == null) {

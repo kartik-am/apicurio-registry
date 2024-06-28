@@ -1203,7 +1203,8 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             // Formulate the SELECT clause for the artifacts query
             select.append(
                     "SELECT a.*, v.globalId, v.version, v.state, v.name, v.description, v.labels, v.properties, "
-                            + "v.createdBy AS modifiedBy, v.createdOn AS modifiedOn "
+                            + "v.createdBy AS modifiedBy, v.createdOn AS modifiedOn, "
+                            + "v.owner, v.approvalState, v.artifactCategory "
                             + "FROM artifacts a "
                             + "JOIN versions v ON a.tenantId = v.tenantId AND a.latest = v.globalId ");
             if (joinContentTable) {
@@ -1231,6 +1232,9 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                                 + "v.groupId LIKE ? OR "
                                 + "a.artifactId LIKE ? OR "
                                 + "v.description LIKE ? OR "
+                                + "v.owner LIKE ? OR "
+                                + "v.approvalState LIKE ? OR "
+                                + "v.artifactCategory LIKE ? OR "
                                 + "EXISTS(SELECT l.globalId FROM labels l WHERE l.label = ? AND l.globalId = v.globalId AND l.tenantId = v.tenantId) OR "
                                 + "EXISTS(SELECT p.globalId FROM properties p WHERE p.pkey = ? AND p.globalId = v.globalId AND p.tenantId = v.tenantId)"
                                 + ")");
@@ -1245,6 +1249,16 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         });
                         binders.add((query, idx) -> {
                             query.bind(idx, "%" + filter.getStringValue() + "%");
+                        });
+//                        Adding binders for owner, approval status and category
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue() + "%");
+                        });
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue().toUpperCase() + "%");
+                        });
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue().toUpperCase() + "%");
                         });
                         binders.add((query, idx) -> {
                             //    Note: convert search to lowercase when searching for labels (case-insensitivity support).
@@ -1316,6 +1330,24 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         where.append("(v.contentId = ?)");
                         binders.add((query, idx) -> {
                             query.bind(idx, filter.getNumberValue().longValue());
+                        });
+                        break;
+                    case owner:
+                        where.append("v.owner LIKE ?");
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue() + "%");
+                        });
+                        break;
+                    case approvalStatus:
+                        where.append("v.approvalState LIKE ?");
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue().toUpperCase() + "%");
+                        });
+                        break;
+                    case category:
+                        where.append("v.artifactCategory LIKE ?");
+                        binders.add((query, idx) -> {
+                            query.bind(idx, "%" + filter.getStringValue().toUpperCase() + "%");
                         });
                         break;
                     default:

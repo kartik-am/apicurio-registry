@@ -38,6 +38,7 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import org.slf4j.Logger;
 
@@ -78,7 +79,8 @@ public class SearchResourceImpl implements SearchResource {
     @Authorized(style = AuthorizedStyle.None, level = AuthorizedLevel.Read)
     public ArtifactSearchResults searchArtifacts(String name, BigInteger offset, BigInteger limit, SortOrder order,
                                                  SortBy orderby, List<String> labels, List<String> properties, String description, String group,
-                                                 Long globalId, Long contentId) {
+                                                 Long globalId, Long contentId, String owner, String approvalStatus,
+                                                 String category) {
         if (orderby == null) {
             orderby = SortBy.name;
         }
@@ -134,6 +136,18 @@ public class SearchResourceImpl implements SearchResource {
         }
         if (contentId != null && contentId > 0) {
             filters.add(SearchFilter.ofContentId(contentId));
+        }
+        if (contentId != null && contentId > 0) {
+            filters.add(SearchFilter.ofContentId(contentId));
+        }
+        if (!StringUtil.isEmpty(owner)) {
+            filters.add(SearchFilter.ofOwner(owner));
+        }
+        if (!StringUtil.isEmpty(approvalStatus)) {
+            filters.add(SearchFilter.ofApprovalStatus(approvalStatus));
+        }
+        if (!StringUtil.isEmpty(category)) {
+            filters.add(SearchFilter.ofCategory(category));
         }
 
         ArtifactSearchResultsDto results = storage.searchArtifacts(filters, oBy, oDir, offset.intValue(), limit.intValue());

@@ -274,6 +274,9 @@ public final class V2ApiUtil {
             sa.setName(artifact.getName());
             sa.setState(artifact.getState());
             sa.setType(artifact.getType());
+            sa.setOwner(artifact.getOwner());
+            sa.setApprovalStatus(artifact.getApprovalStatus());
+            sa.setCategory(artifact.getCategory());
             results.getArtifacts().add(sa);
         });
         return results;

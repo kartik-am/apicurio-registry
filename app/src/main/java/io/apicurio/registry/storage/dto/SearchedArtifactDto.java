@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.apicurio.registry.rest.v2.beans.ApprovalState;
+import io.apicurio.registry.rest.v2.beans.ArtifactCategory;
 import io.apicurio.registry.types.ArtifactState;
 
 /**
@@ -38,6 +40,9 @@ public class SearchedArtifactDto {
     private ArtifactState state;
     private Date modifiedOn;
     private String modifiedBy;
+    private String owner;
+    private ApprovalState approvalStatus;
+    private ArtifactCategory category;
     
     /**
      * Constructor.
@@ -199,4 +204,27 @@ public class SearchedArtifactDto {
         this.modifiedBy = modifiedBy;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public ApprovalState getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(ApprovalState approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public ArtifactCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ArtifactCategory category) {
+        this.category = category;
+    }
 }
