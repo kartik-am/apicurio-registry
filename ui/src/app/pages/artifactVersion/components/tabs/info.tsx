@@ -189,6 +189,18 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                         )}</DescriptionListDescription>
                                     }
                                 </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Owner</DescriptionListTerm>
+                                    <DescriptionListDescription>{this.props.artifact.owner}</DescriptionListDescription>
+                                </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Approval Status</DescriptionListTerm>
+                                    <DescriptionListDescription>{this.props.artifact.approvalStatus}</DescriptionListDescription>
+                                </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Category</DescriptionListTerm>
+                                    <DescriptionListDescription>{this.props.artifact.category}</DescriptionListDescription>
+                                </DescriptionListGroup>
                             </DescriptionList>
                             <div className="actions">
                                 <Button id="download-action"
