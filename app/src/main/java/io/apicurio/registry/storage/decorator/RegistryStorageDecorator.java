@@ -144,10 +144,10 @@ public abstract class RegistryStorageDecorator implements RegistryStorage {
     @Override
     public ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId,
                                                           String version, String artifactType, ContentHandle content,
-                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references)
+                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent)
             throws ArtifactAlreadyExistsException, RegistryStorageException {
         return delegate.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content,
-                metaData, references);
+                metaData, references, markdownContent);
     }
 
     /**

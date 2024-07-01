@@ -327,7 +327,7 @@ public class ApiServiceImpl implements ApiService {
             properties.put(SCHEMA_NAME_ADDITIONAL_PROPERTY, schemaName);
             dto.setProperties(properties);
             try {
-                ArtifactMetaDataDto amdd = storage.createArtifactWithMetadata(null, artifactId, null, ArtifactType.AVRO, content, dto, null);
+                ArtifactMetaDataDto amdd = storage.createArtifactWithMetadata(null, artifactId, null, ArtifactType.AVRO, content, dto, null, null);
                 handleArtifactCreation(response, artifactId, amdd);
             } catch (Exception e) {
                 response.resume(e);

@@ -85,11 +85,11 @@ public class RegistryStorageLimitsEnforcer extends RegistryStorageDecorator {
     @Override
     public ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId,
                                                           String version, String artifactType, ContentHandle content,
-                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references)
+                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent)
             throws ArtifactAlreadyExistsException, RegistryStorageException {
 
         ArtifactMetaDataDto dto = withLimitsCheck(() -> limitsService.canCreateArtifact(metaData, content))
-                .execute(() -> super.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references));
+                .execute(() -> super.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references, markdownContent));
         limitsService.artifactCreated();
         return dto;
     }

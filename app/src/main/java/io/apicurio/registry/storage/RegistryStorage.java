@@ -135,7 +135,7 @@ public interface RegistryStorage extends DynamicConfigStorage {
      * @throws RegistryStorageException
      */
     ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                   String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references) throws ArtifactAlreadyExistsException, RegistryStorageException;
+                                                   String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references,ContentHandle markdownContent) throws ArtifactAlreadyExistsException, RegistryStorageException;
 
     /**
      * Deletes an artifact by its group and unique id. Returns list of artifact versions.

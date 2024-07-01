@@ -497,7 +497,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
     private ArtifactVersionMetaDataDto createArtifactVersion(Handle handle, String artifactType,
                                                              boolean firstVersion, String groupId, String artifactId, String version, String name, String description, List<String> labels,
                                                              Map<String, String> properties, String createdBy, Date createdOn, Long contentId,
-                                                             IdGenerator globalIdGenerator) {
+                                                             IdGenerator globalIdGenerator, ContentHandle markdownContent) {
 
         ArtifactState state = ArtifactState.ENABLED;
         String labelsStr = RegistryContentUtils.serializeLabels(labels);
@@ -590,6 +590,19 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         .bind(3, limitStr(v.toLowerCase(), 1024))
                         .execute();
             });
+        }
+
+        //Insert markdowncontent in the markdown table - Kajal **
+        if(null!= markdownContent) {
+            // Get the content as a byte array (for storage in the DB)
+            byte[] markdownContentBytes = markdownContent.bytes();
+            // Insert markdown content into the "markdown" table
+            sql = sqlStatements.insertMarkdown();
+            handle.createUpdate(sql)
+                    .bind(0, tenantContext.tenantId())
+                    .bind(1, globalId)
+                    .bind(2, markdownContentBytes)
+                    .execute();
         }
 
         // Update the "latest" column in the artifacts table with the globalId of the new version
@@ -740,13 +753,13 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
     @Override
     @Transactional
     public ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references)
+                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent)
             throws ArtifactNotFoundException, ArtifactAlreadyExistsException, RegistryStorageException {
-        return createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references, null);
+        return createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references,null, markdownContent );
     }
 
     protected ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                             String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, IdGenerator globalIdGenerator)
+                                                             String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, IdGenerator globalIdGenerator, ContentHandle markdownContent)
             throws ArtifactNotFoundException, ArtifactAlreadyExistsException, RegistryStorageException {
 
         String createdBy = securityIdentity.getPrincipal().getName();
@@ -764,7 +777,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         }
 
         // Put the content in the DB and get the unique content ID back.
-        //Kajal - along with the content and references, put the markdownContent as well *******
+
         long contentId = handles.withHandleNoException(handle -> {
             return createOrUpdateContent(handle, artifactType, content, references);
         });
@@ -776,12 +789,12 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         }
         // This current method is skipped in KafkaSQL, and the one below is called directly,
         // so references must be added to the metadata there.
-        return createArtifactWithMetadata(groupId, artifactId, version, artifactType, contentId, createdBy, createdOn, md, globalIdGenerator);
+        return createArtifactWithMetadata(groupId, artifactId, version, artifactType, contentId, createdBy, createdOn, md, globalIdGenerator, markdownContent);
     }
 
     protected ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId, String version,
                                                              String artifactType, long contentId, String createdBy, Date createdOn, EditableArtifactMetaDataDto metaData,
-                                                             IdGenerator globalIdGenerator) {
+                                                             IdGenerator globalIdGenerator, ContentHandle markdownContent) {
         log.debug("Inserting an artifact row for: {} {}", groupId, artifactId);
         try {
             return this.handles.withHandle(handle -> {
@@ -799,7 +812,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 // Then create a row in the content and versions tables (for the content and version meta-data)
                 ArtifactVersionMetaDataDto vmdd = this.createArtifactVersion(handle, artifactType, true, groupId, artifactId, version,
                         metaData.getName(), metaData.getDescription(), metaData.getLabels(), metaData.getProperties(), createdBy, createdOn,
-                        contentId, globalIdGenerator);
+                        contentId, globalIdGenerator, markdownContent);
 
                 // Get the content so we can return references in the metadata
                 ContentAndReferencesDto contentAndReferences = getArtifactByContentId(contentId);
@@ -1097,7 +1110,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
 
                 // Now create the version and return the new version metadata.
                 ArtifactVersionMetaDataDto versionDto = this.createArtifactVersion(handle, artifactType, false, groupId, artifactId, version,
-                        name, description, labels, properties, createdBy, createdOn, contentId, globalIdGenerator);
+                        name, description, labels, properties, createdBy, createdOn, contentId, globalIdGenerator, null);
                 ArtifactMetaDataDto dto = versionToArtifactDto(groupId, artifactId, versionDto);
                 dto.setCreatedOn(latest.getCreatedOn());
                 dto.setCreatedBy(latest.getCreatedBy());

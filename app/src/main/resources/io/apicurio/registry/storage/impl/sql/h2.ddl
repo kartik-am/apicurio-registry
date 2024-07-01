@@ -75,4 +75,7 @@ CREATE TABLE artifactreferences (tenantId VARCHAR(128) NOT NULL, contentId BIGIN
 ALTER TABLE artifactreferences ADD PRIMARY KEY (tenantId, contentId, name);
 ALTER TABLE artifactreferences ADD CONSTRAINT FK_artifactreferences_1 FOREIGN KEY (tenantId, contentId) REFERENCES content(tenantId, contentId) ON DELETE CASCADE;
 
+CREATE TABLE markdown (tenantId VARCHAR(128) NOT NULL, groupId VARCHAR(512), artifactId VARCHAR(512) NOT NULL, version VARCHAR(256), content BYTEA NOT NULL);
+ALTER TABLE markdown ADD PRIMARY KEY (tenantId, artifactId, version);
+ALTER TABLE markdown ADD CONSTRAINT FK_markdown_1 FOREIGN KEY (tenantId, artifactId, version) REFERENCES versions(tenantId, artifactId, version) ON DELETE CASCADE;
 

@@ -1125,4 +1125,8 @@ public abstract class CommonSqlStatements implements SqlStatements {
         return "UPDATE comments SET cvalue = ? WHERE tenantId = ? AND globalId = ? AND commentId = ? AND createdBy = ?";
     }
 
+    public String insertMarkdown() {
+        return "INSERT INTO markdown (tenantId, groupId, artifactId, version, content) VALUES (?, ?, ?, ?, ?)";
+    }
+
 }

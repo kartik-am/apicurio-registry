@@ -104,8 +104,8 @@ public class EventSourcedRegistryStorage extends RegistryStorageDecorator {
      */
     @Override
     public ArtifactMetaDataDto createArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references) throws ArtifactAlreadyExistsException, RegistryStorageException {
-        ArtifactMetaDataDto meta = delegate.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references);
+                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent) throws ArtifactAlreadyExistsException, RegistryStorageException {
+        ArtifactMetaDataDto meta = delegate.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references, markdownContent);
         ArtifactId data = new ArtifactId();
         data.setGroupId(groupId);
         data.setArtifactId(artifactId);

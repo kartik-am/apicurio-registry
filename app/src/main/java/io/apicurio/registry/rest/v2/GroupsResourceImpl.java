@@ -120,7 +120,7 @@ public class GroupsResourceImpl implements GroupsResource {
     CommonResourceOperations common;
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getLatestArtifact(java.lang.String, java.lang.String, java.lang.Boolean)
+     * @see GroupsResource#getLatestArtifact(String, String, Boolean)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -163,7 +163,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifact(String, String, String, String, String, String, String, InputStream)
+     * @see GroupsResource#updateArtifact(String, String, String, String, String, String, String, InputStream)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_NAME, "4", KEY_NAME_ENCODED, "5", KEY_DESCRIPTION, "6", KEY_DESCRIPTION_ENCODED})
@@ -175,7 +175,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifact(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.ArtifactContent)
+     * @see GroupsResource#updateArtifact(String, String, String, String, String, String, String, ArtifactContent)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_NAME, "4", KEY_NAME_ENCODED, "5", KEY_DESCRIPTION, "6", KEY_DESCRIPTION_ENCODED})
@@ -188,7 +188,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersionReferences(java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.types.ReferenceType)
+     * @see GroupsResource#getArtifactVersionReferences(String, String, String, ReferenceType)
      */
     @Override
     public List<ArtifactReference> getArtifactVersionReferences(String groupId, String artifactId,
@@ -223,7 +223,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifact(java.lang.String, java.lang.String)
+     * @see GroupsResource#deleteArtifact(String, String)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID})
@@ -236,7 +236,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactMetaData(java.lang.String, java.lang.String)
+     * @see GroupsResource#getArtifactMetaData(String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -249,7 +249,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactMetaData(java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.EditableMetaData)
+     * @see GroupsResource#updateArtifactMetaData(String, String, EditableMetaData)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_EDITABLE_METADATA})
@@ -356,7 +356,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersionMetaDataByContent(java.lang.String, java.lang.String, java.lang.Boolean, java.io.InputStream)
+     * @see GroupsResource#getArtifactVersionMetaDataByContent(String, String, Boolean, InputStream)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -386,7 +386,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#listArtifactRules(java.lang.String, java.lang.String)
+     * @see GroupsResource#listArtifactRules(String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -398,7 +398,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#createArtifactRule(java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.Rule)
+     * @see GroupsResource#createArtifactRule(String, String, Rule)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_RULE})
@@ -418,7 +418,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactRules(java.lang.String, java.lang.String)
+     * @see GroupsResource#deleteArtifactRules(String, String)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID})
@@ -431,7 +431,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactRuleConfig(java.lang.String, java.lang.String, io.apicurio.registry.types.RuleType)
+     * @see GroupsResource#getArtifactRuleConfig(String, String, RuleType)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -448,7 +448,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactRuleConfig(java.lang.String, java.lang.String, io.apicurio.registry.types.RuleType, io.apicurio.registry.rest.v2.beans.Rule)
+     * @see GroupsResource#updateArtifactRuleConfig(String, String, RuleType, Rule)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_RULE_TYPE, "3", KEY_RULE})
@@ -467,7 +467,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactRule(java.lang.String, java.lang.String, io.apicurio.registry.types.RuleType)
+     * @see GroupsResource#deleteArtifactRule(String, String, RuleType)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_RULE_TYPE})
@@ -481,7 +481,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactState(java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.UpdateState)
+     * @see GroupsResource#updateArtifactState(String, String, UpdateState)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_UPDATE_STATE})
@@ -494,7 +494,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#testUpdateArtifact(java.lang.String, java.lang.String, java.io.InputStream)
+     * @see GroupsResource#testUpdateArtifact(String, String, InputStream)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Write)
@@ -516,7 +516,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersion(java.lang.String, java.lang.String, java.lang.String, java.lang.Boolean)
+     * @see GroupsResource#getArtifactVersion(String, String, String, Boolean)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -560,7 +560,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactVersion(java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#deleteArtifactVersion(String, String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Write)
@@ -577,7 +577,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersionMetaData(java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#getArtifactVersionMetaData(String, String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -591,7 +591,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactVersionMetaData(java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.EditableMetaData)
+     * @see GroupsResource#updateArtifactVersionMetaData(String, String, String, EditableMetaData)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_EDITABLE_METADATA})
@@ -612,7 +612,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactVersionMetaData(java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#deleteArtifactVersionMetaData(String, String, String)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION})
@@ -626,7 +626,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
     
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#addArtifactVersionComment(java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.NewComment)
+     * @see GroupsResource#addArtifactVersionComment(String, String, String, NewComment)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION})
@@ -641,7 +641,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
     
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactVersionComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#deleteArtifactVersionComment(String, String, String, String)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", "comment_id"})
@@ -656,7 +656,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
     
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersionComments(java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#getArtifactVersionComments(String, String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -671,7 +671,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
     
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactVersionComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.NewComment)
+     * @see GroupsResource#updateArtifactVersionComment(String, String, String, String, NewComment)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", "comment_id"})
@@ -687,7 +687,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifactVersionState(java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.UpdateState)
+     * @see GroupsResource#updateArtifactVersionState(String, String, String, UpdateState)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_UPDATE_STATE})
@@ -701,7 +701,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#listArtifactsInGroup (java.lang.String, java.lang.Integer, java.lang.Integer, io.apicurio.registry.rest.v2.beans.SortOrder, io.apicurio.registry.rest.v2.beans.SortBy)
+     * @see GroupsResource#listArtifactsInGroup (java.lang.String, java.lang.Integer, java.lang.Integer, io.apicurio.registry.rest.v2.beans.SortOrder, io.apicurio.registry.rest.v2.beans.SortBy)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupOnly, level = AuthorizedLevel.Read)
@@ -730,7 +730,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#deleteArtifactsInGroup(java.lang.String)
+     * @see GroupsResource#deleteArtifactsInGroup(String)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID})
@@ -742,7 +742,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#createArtifact(String, String, String, String, IfExists, Boolean, String, String, String, String, String, String, InputStream)
+     * @see GroupsResource#createArtifact(String, String, String, String, IfExists, Boolean, String, String, String, String, String, String, InputStream)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_TYPE, "2", KEY_ARTIFACT_ID, "3", KEY_VERSION, "4", KEY_IF_EXISTS, "5", KEY_CANONICAL, "6", KEY_DESCRIPTION, "7", KEY_DESCRIPTION_ENCODED, "8", KEY_NAME, "9", KEY_NAME_ENCODED, "10", KEY_FROM_URL, "11", KEY_SHA})
@@ -752,11 +752,11 @@ public class GroupsResourceImpl implements GroupsResource {
                                            String xRegistryDescription, String xRegistryDescriptionEncoded,
                                            String xRegistryName, String xRegistryNameEncoded,
                                            String xRegistryContentHash, String xRegistryHashAlgorithm, InputStream data) {
-        return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, data, Collections.emptyList());
+        return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, data, Collections.emptyList(), null);
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#createArtifact(String, String, String, String, IfExists, Boolean, String, String, String, String, String, String, ArtifactContent)
+     * @see GroupsResource#createArtifact(String, String, String, String, IfExists, Boolean, String, String, String, String, String, String, ArtifactContent)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_TYPE, "2", KEY_ARTIFACT_ID, "3", KEY_VERSION, "4", KEY_IF_EXISTS, "5", KEY_CANONICAL, "6", KEY_DESCRIPTION, "7", KEY_DESCRIPTION_ENCODED, "8", KEY_NAME, "9", KEY_NAME_ENCODED, "10", "from_url" /*KEY_FROM_URL*/, "11", "artifact_sha" /*KEY_SHA*/})
@@ -770,6 +770,8 @@ public class GroupsResourceImpl implements GroupsResource {
 
         Client client = null;
         InputStream content;
+        InputStream markdownContent = null;
+
         try {
             try {
                 URL url = new URL(data.getContent());
@@ -779,7 +781,12 @@ public class GroupsResourceImpl implements GroupsResource {
                 content = IoUtil.toStream(data.getContent());
             }
 
-            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences());
+            //code for markdownContent
+
+            if(null != data.getMarkdown() || !data.getMarkdown().isEmpty()){
+                 markdownContent = createMarkdownContent(data.getMarkdown());
+            }
+            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(),markdownContent);
         } catch (KeyManagementException kme) {
             throw new RuntimeException(kme);
         } catch (NoSuchAlgorithmException nsae) {
@@ -796,11 +803,29 @@ public class GroupsResourceImpl implements GroupsResource {
         MD5
     }
 
+    private InputStream createMarkdownContent(String markdownData)  {
+        MarkdownContent markdownContent = new MarkdownContent();
+        InputStream markdownContentStream = null;
+
+        try {
+            URL url = new URL(markdownData);
+            Client client = JAXRSClientUtil.getJAXRSClient(restConfig.getDownloadSkipSSLValidation());
+            markdownContentStream = fetchContentFromURL(client, url.toURI());
+        } catch (MalformedURLException | URISyntaxException e) {
+            markdownContentStream = IoUtil.toStream(markdownData);
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            // Handle the exceptions
+        }
+
+        return markdownContentStream;
+    }
+
     /**
      * Return an InputStream for the resource to be downloaded
      *
      * @param url
      */
+
     private InputStream fetchContentFromURL(Client client, URI url) {
         try {
             // 1. Registry issues HTTP HEAD request to the target URL.
@@ -864,7 +889,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                     String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                     String xRegistryName, String xRegistryNameEncoded,
                                                     String xRegistryContentHash, String xRegistryHashAlgorithm,
-                                                    InputStream data, List<ArtifactReference> references) {
+                                                    InputStream data, List<ArtifactReference> references, InputStream markdownContent) {
 
         requireParameter("groupId", groupId);
 
@@ -884,6 +909,15 @@ public class GroupsResourceImpl implements GroupsResource {
         if (content.bytes().length == 0) {
             throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
         }
+
+        //markdowncontent related changes
+        ContentHandle markdownContentHandle = null;
+        if(null != markdownContent ){
+            markdownContentHandle = ContentHandle.create(markdownContent);
+        }
+//        if (markdownContentHandle.bytes().length == 0) {
+//            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
+//        }
 
         // Mitigation for MITM attacks, verify that the artifact is the expected one
         if (xRegistryContentHash != null) {
@@ -935,7 +969,7 @@ public class GroupsResourceImpl implements GroupsResource {
             final String finalArtifactId = artifactId;
             EditableArtifactMetaDataDto metaData = getEditableMetaData(artifactName, artifactDescription);
 
-            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
+            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentHandle);
             return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), finalArtifactId, artifactType, amd);
         } catch (ArtifactAlreadyExistsException ex) {
             return handleIfExists(groupId, xRegistryArtifactId, xRegistryVersion, ifExists, artifactName, artifactDescription, content, ct, fcanonical, references);
@@ -943,7 +977,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#listArtifactVersions (java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)
+     * @see GroupsResource#listArtifactVersions (java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -963,7 +997,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#createArtifactVersion(String, String, String, String, String, String, String, InputStream)
+     * @see GroupsResource#createArtifactVersion(String, String, String, String, String, String, String, InputStream)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_NAME, "4", KEY_DESCRIPTION, "5", KEY_DESCRIPTION_ENCODED, "6", KEY_NAME_ENCODED})
@@ -976,7 +1010,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#createArtifactVersion(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.ArtifactContent)
+     * @see GroupsResource#createArtifactVersion(String, String, String, String, String, String, String, ArtifactContent)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_NAME, "4", KEY_DESCRIPTION, "5", KEY_DESCRIPTION_ENCODED, "6", KEY_NAME_ENCODED})
@@ -1160,5 +1194,12 @@ public class GroupsResourceImpl implements GroupsResource {
                 }) // .peek(...) may be optimized away
                 .map(V2ApiUtil::referenceToDto)
                 .collect(Collectors.toList());
+    }
+
+    private MarkdownContentDto toMarkdownContentDto(MarkdownContent markdownContent) {
+        MarkdownContentDto markdownContentDto = new MarkdownContentDto();
+       // markdownContentDto.setName(markdownContent.getName());
+        markdownContentDto.setContent(markdownContent.getContent());
+        return markdownContentDto;
     }
 }

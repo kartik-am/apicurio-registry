@@ -224,7 +224,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
         EditableArtifactMetaDataDto metaData = new EditableArtifactMetaDataDto(
                 "NAME", "DESCRIPTION", Collections.singletonList("LABEL-1"), Collections.singletonMap("KEY", "VALUE")
         );
-        ArtifactMetaDataDto dto = storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null);
+        ArtifactMetaDataDto dto = storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null, null);
         Assertions.assertNotNull(dto);
         Assertions.assertEquals(GROUP_ID, dto.getGroupId());
         Assertions.assertEquals(artifactId, dto.getId());
@@ -262,7 +262,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
         metaData.getLabels().add("label-" + generateString(300));
         metaData.setProperties(new HashMap<>());
         metaData.getProperties().put("key-" + generateString(300), "value-" + generateString(2000));
-        dto = storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null);
+        dto = storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null, null);
 
         dto = storage().getArtifactMetaData(dto.getGlobalId());
         Assertions.assertNotNull(dto);
@@ -918,7 +918,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
                     artifactId + "-description",
                     labels,
                     properties);
-            storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null);
+            storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null, null);
         }
 
         long start = System.currentTimeMillis();
@@ -1034,7 +1034,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
         ArtifactMetaDataDto artifactDto1 = storage().createArtifact(group1, artifactId1, null, ArtifactType.OPENAPI, content, null);
         storage().createArtifactRule(group1, artifactId1, RuleType.VALIDITY, RuleConfigurationDto.builder().configuration("FULL").build());
         ArtifactMetaDataDto artifactDto2 = storage().createArtifactWithMetadata(
-                group2, artifactId2, null, ArtifactType.OPENAPI, content, EditableArtifactMetaDataDto.builder().name("test").build(), null);
+                group2, artifactId2, null, ArtifactType.OPENAPI, content, EditableArtifactMetaDataDto.builder().name("test").build(), null, null);
         storage().createGlobalRule(RuleType.VALIDITY, RuleConfigurationDto.builder().configuration("FULL").build());
         storage().createRoleMapping(principal, role, null);
 
@@ -1188,7 +1188,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
                     artifactId + "-description",
                     labels,
                     properties);
-            storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null);
+            storage().createArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null, null);
         }
 
         // Search for the artifacts using Tenant 2 (0 results expected)
