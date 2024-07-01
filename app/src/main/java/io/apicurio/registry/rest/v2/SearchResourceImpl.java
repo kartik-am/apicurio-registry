@@ -38,7 +38,6 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import org.slf4j.Logger;
 
