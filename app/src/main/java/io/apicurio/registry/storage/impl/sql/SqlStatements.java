@@ -653,4 +653,6 @@ public interface SqlStatements {
      */
     public String selectArtifactVersionsSkipDisabled();
 
+    public String insertMarkdown();
+
 }

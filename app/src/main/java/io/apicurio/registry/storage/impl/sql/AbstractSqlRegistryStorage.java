@@ -488,7 +488,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
 
     protected ArtifactMetaDataDto createArtifact(String groupId, String artifactId, String version, String artifactType,
                                                  ContentHandle content, List<ArtifactReferenceDto> references, IdGenerator globalIdGenerator) throws ArtifactAlreadyExistsException, ArtifactNotFoundException, RegistryStorageException {
-        return this.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, null, references, globalIdGenerator);
+        return this.createArtifactWithMetadata(groupId, artifactId, version, artifactType, content, null, references, globalIdGenerator, null);
     }
 
     /**
@@ -600,7 +600,9 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             sql = sqlStatements.insertMarkdown();
             handle.createUpdate(sql)
                     .bind(0, tenantContext.tenantId())
-                    .bind(1, globalId)
+                    .bind(1, groupId)
+                    .bind(2, artifactId)
+                    .bind(3, version)
                     .bind(2, markdownContentBytes)
                     .execute();
         }

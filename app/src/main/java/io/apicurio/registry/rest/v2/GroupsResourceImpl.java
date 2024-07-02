@@ -782,7 +782,6 @@ public class GroupsResourceImpl implements GroupsResource {
             }
 
             //code for markdownContent
-
             if(null != data.getMarkdown() || !data.getMarkdown().isEmpty()){
                  markdownContent = createMarkdownContent(data.getMarkdown());
             }
@@ -803,7 +802,7 @@ public class GroupsResourceImpl implements GroupsResource {
         MD5
     }
 
-    private InputStream createMarkdownContent(String markdownData)  {
+    private InputStream createMarkdownContent(String markdownData) throws NoSuchAlgorithmException, KeyManagementException {
         MarkdownContent markdownContent = new MarkdownContent();
         InputStream markdownContentStream = null;
 
@@ -813,8 +812,6 @@ public class GroupsResourceImpl implements GroupsResource {
             markdownContentStream = fetchContentFromURL(client, url.toURI());
         } catch (MalformedURLException | URISyntaxException e) {
             markdownContentStream = IoUtil.toStream(markdownData);
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            // Handle the exceptions
         }
 
         return markdownContentStream;
@@ -960,6 +957,7 @@ public class GroupsResourceImpl implements GroupsResource {
             String artifactType = ArtifactTypeUtil.determineArtifactType(content, xRegistryArtifactType, ct, factory.getAllArtifactTypes());
 
             final List<ArtifactReferenceDto> referencesAsDtos = toReferenceDtos(references);
+            final MarkdownContentDto markdownContentDto = V2ApiUtil.toMarkdownContentDto(markdownContentHandle);
 
             //Try to resolve the new artifact references and the nested ones (if any)
             final Map<String, ContentHandle> resolvedReferences = RegistryContentUtils.recursivelyResolveReferences(referencesAsDtos, storage::getContentByReference);
@@ -969,7 +967,7 @@ public class GroupsResourceImpl implements GroupsResource {
             final String finalArtifactId = artifactId;
             EditableArtifactMetaDataDto metaData = getEditableMetaData(artifactName, artifactDescription);
 
-            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentHandle);
+            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentDto.getContent());
             return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), finalArtifactId, artifactType, amd);
         } catch (ArtifactAlreadyExistsException ex) {
             return handleIfExists(groupId, xRegistryArtifactId, xRegistryVersion, ifExists, artifactName, artifactDescription, content, ct, fcanonical, references);
@@ -1196,10 +1194,5 @@ public class GroupsResourceImpl implements GroupsResource {
                 .collect(Collectors.toList());
     }
 
-    private MarkdownContentDto toMarkdownContentDto(MarkdownContent markdownContent) {
-        MarkdownContentDto markdownContentDto = new MarkdownContentDto();
-       // markdownContentDto.setName(markdownContent.getName());
-        markdownContentDto.setContent(markdownContent.getContent());
-        return markdownContentDto;
-    }
+
 }

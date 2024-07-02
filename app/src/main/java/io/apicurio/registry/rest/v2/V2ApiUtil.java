@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.apicurio.registry.content.ContentHandle;
 import io.apicurio.registry.rest.v2.beans.ArtifactMetaData;
 import io.apicurio.registry.rest.v2.beans.ArtifactReference;
 import io.apicurio.registry.rest.v2.beans.ArtifactSearchResults;
@@ -36,15 +37,7 @@ import io.apicurio.registry.rest.v2.beans.SearchedVersion;
 import io.apicurio.registry.rest.v2.beans.SortOrder;
 import io.apicurio.registry.rest.v2.beans.VersionMetaData;
 import io.apicurio.registry.rest.v2.beans.VersionSearchResults;
-import io.apicurio.registry.storage.dto.ArtifactMetaDataDto;
-import io.apicurio.registry.storage.dto.ArtifactReferenceDto;
-import io.apicurio.registry.storage.dto.ArtifactSearchResultsDto;
-import io.apicurio.registry.storage.dto.ArtifactVersionMetaDataDto;
-import io.apicurio.registry.storage.dto.CommentDto;
-import io.apicurio.registry.storage.dto.EditableArtifactMetaDataDto;
-import io.apicurio.registry.storage.dto.GroupMetaDataDto;
-import io.apicurio.registry.storage.dto.GroupSearchResultsDto;
-import io.apicurio.registry.storage.dto.VersionSearchResultsDto;
+import io.apicurio.registry.storage.dto.*;
 
 /**
  * @author eric.wittmann@gmail.com
@@ -364,5 +357,12 @@ public final class V2ApiUtil {
 
     public static String nullGroupIdToDefault(String groupId) {
         return groupId != null ? groupId : "default";
+    }
+
+    public static MarkdownContentDto toMarkdownContentDto(ContentHandle markdownContent) {
+        MarkdownContentDto markdownContentDto = new MarkdownContentDto();
+        // markdownContentDto.setName(markdownContent.getName());
+        markdownContentDto.setContent(markdownContent);
+        return markdownContentDto;
     }
 }
