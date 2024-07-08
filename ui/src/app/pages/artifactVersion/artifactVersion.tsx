@@ -99,19 +99,19 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
         const tabs: React.ReactNode[] = [
             <Tab eventKey={0} title="Overview" key="overview" tabContentId="tab-info">
                 <InfoTabContent artifact={artifact}
-                                isLatest={this.versionParam() === "latest"}
-                                codegenEnabled={Services.getConfigService().uiCodegenEnabled()}
-                                rules={this.rules()}
-                                onEnableRule={this.doEnableRule}
-                                onDisableRule={this.doDisableRule}
-                                onConfigureRule={this.doConfigureRule}
-                                onDownloadArtifact={this.doDownloadArtifact}
-                                onEditMetaData={this.openEditMetaDataModal}
-                                onGenerateClient={this.openGenerateClientModal}
-                                onChangeOwner={this.openChangeOwnerModal}
+                    isLatest={this.versionParam() === "latest"}
+                    codegenEnabled={Services.getConfigService().uiCodegenEnabled()}
+                    rules={this.rules()}
+                    onEnableRule={this.doEnableRule}
+                    onDisableRule={this.doDisableRule}
+                    onConfigureRule={this.doConfigureRule}
+                    onDownloadArtifact={this.doDownloadArtifact}
+                    onEditMetaData={this.openEditMetaDataModal}
+                    onGenerateClient={this.openGenerateClientModal}
+                    onChangeOwner={this.openChangeOwnerModal}
                 />
             </Tab>,
-            <Tab eventKey={1} title="Documentation" key="documentation">
+            <Tab eventKey={1} title="Preview" key="documentation">
                 <DocumentationTabContent artifactContent={this.state.artifactContent} artifactType={artifact.type} />
             </Tab>,
             <Tab eventKey={2} title="Content" key="content">
@@ -120,6 +120,9 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             <Tab eventKey={3} title="References" key="references">
                 <ReferencesTabContent artifact={this.state.artifact} artifactType={artifact.type} />
             </Tab>,
+            <Tab eventKey={4} title="Documentation" key="documentation">
+            <DocumentationTabContent artifactContent={this.state.artifactContent} artifactType={artifact.type} />
+        </Tab>,
         ];
         if (!this.showDocumentationTab()) {
             tabs.splice(1, 1);
@@ -130,16 +133,16 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
         let breadcrumbs = (
             <Breadcrumb>
                 <BreadcrumbItem><Link to={this.linkTo("/artifacts")} data-testid="breadcrumb-lnk-artifacts">Artifacts</Link></BreadcrumbItem>
-                <BreadcrumbItem><Link to={this.linkTo(`/artifacts?group=${ encodeURIComponent(groupId) }`)}
-                                      data-testid="breadcrumb-lnk-group">{ groupId }</Link></BreadcrumbItem>
-                <BreadcrumbItem isActive={true}>{ this.artifactId() }</BreadcrumbItem>
+                <BreadcrumbItem><Link to={this.linkTo(`/artifacts?group=${encodeURIComponent(groupId)}`)}
+                    data-testid="breadcrumb-lnk-group">{groupId}</Link></BreadcrumbItem>
+                <BreadcrumbItem isActive={true}>{this.artifactId()}</BreadcrumbItem>
             </Breadcrumb>
         );
         if (!hasGroup) {
             breadcrumbs = (
                 <Breadcrumb>
                     <BreadcrumbItem><Link to="/artifacts" data-testid="breadcrumb-lnk-artifacts">Artifacts</Link></BreadcrumbItem>
-                    <BreadcrumbItem isActive={true}>{ this.artifactId() }</BreadcrumbItem>
+                    <BreadcrumbItem isActive={true}>{this.artifactId()}</BreadcrumbItem>
                 </Breadcrumb>
             );
         }
@@ -151,21 +154,21 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                 </IfFeature>
                 <PageSection className="ps_artifact-version-header" variant={PageSectionVariants.light}>
                     <ArtifactVersionPageHeader title={this.nameOrId()}
-                                               versions={this.versions()}
-                                               version={this.versionParam()}
-                                               onUploadVersion={this.onUploadVersion}
-                                               onDeleteArtifact={this.onDeleteArtifact}
-                                               groupId={groupId}
-                                               artifactId={this.artifactId()} />
+                        versions={this.versions()}
+                        version={this.versionParam()}
+                        onUploadVersion={this.onUploadVersion}
+                        onDeleteArtifact={this.onDeleteArtifact}
+                        groupId={groupId}
+                        artifactId={this.artifactId()} />
                 </PageSection>
-                <PageSection variant={PageSectionVariants.light} isFilled={true} padding={{default : "noPadding"}} className="artifact-details-main">
+                <PageSection variant={PageSectionVariants.light} isFilled={true} padding={{ default: "noPadding" }} className="artifact-details-main">
                     <Tabs className="artifact-page-tabs"
-                          id="artifact-page-tabs"
-                          unmountOnExit={true}
-                          isFilled={false}
-                          activeKey={this.state.activeTabKey}
-                          children={tabs}
-                          onSelect={this.handleTabClick}
+                        id="artifact-page-tabs"
+                        unmountOnExit={true}
+                        isFilled={false}
+                        activeKey={this.state.activeTabKey}
+                        children={tabs}
+                        onSelect={this.handleTabClick}
                     />
                 </PageSection>
                 <Modal
@@ -195,27 +198,27 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                     <p>Do you want to delete this artifact and all of its versions?  This action cannot be undone.</p>
                 </Modal>
                 <EditMetaDataModal name={this.artifactName()}
-                                   description={this.artifactDescription()}
-                                   labels={this.artifactLabels()}
-                                   properties={this.artifactProperties()}
-                                   isOpen={this.state.isEditModalOpen}
-                                   onClose={this.onEditModalClose}
-                                   onEditMetaData={this.doEditMetaData}
+                    description={this.artifactDescription()}
+                    labels={this.artifactLabels()}
+                    properties={this.artifactProperties()}
+                    isOpen={this.state.isEditModalOpen}
+                    onClose={this.onEditModalClose}
+                    onEditMetaData={this.doEditMetaData}
                 />
                 <GenerateClientModal artifactContent={this.state.artifactContent}
-                                   onClose={this.onGenerateClientModalClose}
-                                   isOpen={this.state.isGenerateClientModalOpen}
+                    onClose={this.onGenerateClientModalClose}
+                    isOpen={this.state.isGenerateClientModalOpen}
                 />
                 <ChangeOwnerModal isOpen={this.state.isChangeOwnerModalOpen}
-                                  onClose={this.onChangeOwnerModalClose}
-                                  currentOwner={this.state.artifact?.createdBy || ""}
-                                  onChangeOwner={this.doChangeOwner}
+                    onClose={this.onChangeOwnerModalClose}
+                    currentOwner={this.state.artifact?.createdBy || ""}
+                    onChangeOwner={this.doChangeOwner}
                 />
                 <InvalidContentModal error={this.state.invalidContentError}
-                                     isOpen={this.state.isInvalidContentModalOpen}
-                                     onClose={this.closeInvalidContentModal} />
+                    isOpen={this.state.isInvalidContentModalOpen}
+                    onClose={this.closeInvalidContentModal} />
                 <PleaseWaitModal message={this.state.pleaseWaitMessage}
-                                 isOpen={this.state.isPleaseWaitModalOpen} />
+                    isOpen={this.state.isPleaseWaitModalOpen} />
             </React.Fragment>
         );
     }
@@ -256,7 +259,7 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
 
     // @ts-ignore
     protected createLoaders(): Promise[] | null {
-        let groupId: string|null = this.groupIdParam();
+        let groupId: string | null = this.groupIdParam();
         if (groupId == "default") {
             groupId = null;
         }
@@ -274,7 +277,7 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                         throw e;
                     }
                 }
-            ),
+                ),
             Services.getGroupsService().getArtifactRules(groupId, artifactId).then(rules => this.setSingleState("rules", rules)),
             Services.getGroupsService().getArtifactVersions(groupId, artifactId).then(versions => this.setSingleState("versions", versions.reverse()))
         ];
@@ -311,15 +314,15 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             config = "BACKWARD";
         }
         Services.getGroupsService().createArtifactRule(this.groupId(), this.artifactId(), ruleType, config).catch(error => {
-            this.handleServerError(error, `Error enabling "${ ruleType }" artifact rule.`);
+            this.handleServerError(error, `Error enabling "${ruleType}" artifact rule.`);
         });
-        this.setSingleState("rules", [...this.rules(), {config, type: ruleType}]);
+        this.setSingleState("rules", [...this.rules(), { config, type: ruleType }]);
     };
 
     private doDisableRule = (ruleType: string): void => {
         Services.getLoggerService().debug("[ArtifactVersionPage] Disabling rule:", ruleType);
         Services.getGroupsService().deleteArtifactRule(this.groupId(), this.artifactId(), ruleType).catch(error => {
-            this.handleServerError(error, `Error disabling "${ ruleType }" artifact rule.`);
+            this.handleServerError(error, `Error disabling "${ruleType}" artifact rule.`);
         });
         this.setSingleState("rules", this.rules().filter(r => r.type !== ruleType));
     };
@@ -327,11 +330,11 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
     private doConfigureRule = (ruleType: string, config: string): void => {
         Services.getLoggerService().debug("[ArtifactVersionPage] Configuring rule:", ruleType, config);
         Services.getGroupsService().updateArtifactRule(this.groupId(), this.artifactId(), ruleType, config).catch(error => {
-            this.handleServerError(error, `Error configuring "${ ruleType }" artifact rule.`);
+            this.handleServerError(error, `Error configuring "${ruleType}" artifact rule.`);
         });
         this.setSingleState("rules", this.rules().map(r => {
             if (r.type === ruleType) {
-                return {config, type: r.type};
+                return { config, type: r.type };
             } else {
                 return r;
             }
@@ -383,7 +386,7 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
         return this.state.artifact ? this.state.artifact.id : "";
     }
 
-    private groupId(): string|null {
+    private groupId(): string | null {
         return this.state.artifact ? this.state.artifact.groupId : null;
     }
 
@@ -445,17 +448,17 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             };
             Services.getGroupsService().createArtifactVersion(this.groupId(), this.artifactId(), data).then(versionMetaData => {
                 const groupId: string = versionMetaData.groupId ? versionMetaData.groupId : "default";
-                const artifactVersionLocation: string = `/artifacts/${ encodeURIComponent(groupId) }/${ encodeURIComponent(versionMetaData.id) }/versions/${versionMetaData.version}`;
+                const artifactVersionLocation: string = `/artifacts/${encodeURIComponent(groupId)}/${encodeURIComponent(versionMetaData.id)}/versions/${versionMetaData.version}`;
                 Services.getLoggerService().info("[ArtifactVersionPage] Artifact version successfully uploaded.  Redirecting to details: ", artifactVersionLocation);
                 this.navigateTo(this.linkTo(artifactVersionLocation))();
-            }).catch( error => {
+            }).catch(error => {
                 this.pleaseWait(false, "");
                 if (error && (error.error_code === 400 || error.error_code === 409)) {
                     this.handleInvalidContentError(error);
                 } else {
                     this.handleServerError(error, "Error uploading artifact version.");
                 }
-                this.setMultiState({uploadFormData: null, isUploadFormValid: false});
+                this.setMultiState({ uploadFormData: null, isUploadFormValid: false });
             });
         }
     };
@@ -463,7 +466,7 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
     private doDeleteArtifact = (): void => {
         this.onDeleteModalClose();
         this.pleaseWait(true, "Deleting artifact, please wait...");
-        Services.getGroupsService().deleteArtifact(this.groupId(), this.artifactId()).then( () => {
+        Services.getGroupsService().deleteArtifact(this.groupId(), this.artifactId()).then(() => {
             this.pleaseWait(false, "");
             this.navigateTo(this.linkTo("/artifacts"))();
         });
@@ -494,28 +497,28 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
     };
 
     private doEditMetaData = (metaData: EditableMetaData): void => {
-        Services.getGroupsService().updateArtifactMetaData(this.groupId(), this.artifactId(), this.versionParam(), metaData).then( () => {
+        Services.getGroupsService().updateArtifactMetaData(this.groupId(), this.artifactId(), this.versionParam(), metaData).then(() => {
             if (this.state.artifact) {
                 this.setSingleState("artifact", {
                     ...this.state.artifact,
                     ...metaData
                 });
             }
-        }).catch( error => {
+        }).catch(error => {
             this.handleServerError(error, "Error editing artifact metadata.");
         });
         this.onEditModalClose();
     };
 
     private doChangeOwner = (newOwner: string): void => {
-        Services.getGroupsService().updateArtifactOwner(this.groupId(), this.artifactId(), newOwner).then( () => {
+        Services.getGroupsService().updateArtifactOwner(this.groupId(), this.artifactId(), newOwner).then(() => {
             if (this.state.artifact) {
                 this.setSingleState("artifact", {
                     ...this.state.artifact,
                     createdBy: newOwner
                 });
             }
-        }).catch( error => {
+        }).catch(error => {
             this.handleServerError(error, "Error changing artifact ownership.");
         });
         this.onChangeOwnerModalClose();

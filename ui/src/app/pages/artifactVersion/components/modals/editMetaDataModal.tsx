@@ -17,7 +17,7 @@
 import React from "react";
 import "./editMetaDataModal.css";
 import { PureComponent, PureComponentProps, PureComponentState } from "../../../../components";
-import { Button, Form, FormGroup, Grid, GridItem, Modal, TextArea, TextInput } from "@patternfly/react-core";
+import { Button, Form, FormGroup, FormSelect, FormSelectOption, Grid, GridItem, HelperText, HelperTextItem, Modal, TextArea, TextInput } from "@patternfly/react-core";
 import { EditableMetaData } from "../../../../../services";
 import { ArtifactProperty, listToProperties, PropertiesFormGroup, propertiesToList } from "./propertiesFormGroup";
 
@@ -126,12 +126,62 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                             </FormGroup>
                         </GridItem>
                         <PropertiesFormGroup properties={this.state.properties}
-                                             onChange={this.onPropertiesChange} />
+                            onChange={this.onPropertiesChange} />
+                        <GridItem span={12}>
+                            <FormGroup label="Approval Status" type="string" fieldId="form-approval-status">
+                                <FormSelect
+                                    id="form-approval-status"
+                                    onChange={() => console.log("Approval Status changed")}
+                                    aria-label="FormSelect Input"
+                                >
+                                    {this.approvalStatusOptions.map((option, index) => (
+                                        <FormSelectOption
+                                            isDisabled={option.disabled}
+                                            key={index}
+                                            value={option.value}
+                                            label={option.label}
+                                            isPlaceholder={option.isPlaceholder}
+                                        />
+                                    ))}
+                                </FormSelect>
+                            </FormGroup>
+                        </GridItem>
+                        <GridItem span={12}>
+                            <FormGroup label="Artifact Category" type="string" fieldId="form-category">
+                                <FormSelect
+                                    id="form-category"
+                                    onChange={() => console.log("Category changed")}
+                                    aria-label="FormSelect Input"
+                                >
+                                    {this.categoryOptions.map((option, index) => (
+                                        <FormSelectOption
+                                            isDisabled={option.disabled}
+                                            key={index}
+                                            value={option.value}
+                                            label={option.label}
+                                            isPlaceholder={option.isPlaceholder}
+                                        />
+                                    ))}
+                                </FormSelect>
+                            </FormGroup>
+                        </GridItem>
                     </Grid>
                 </Form>
             </Modal>
         );
     }
+
+    private approvalStatusOptions = [
+        { value: 'DRAFT', label: 'DRAFT', disabled: false, isPlaceholder: true },
+        { value: 'APPROVED', label: 'APPROVED', disabled: false, isPlaceholder: false },
+        { value: 'REJECTED', label: 'REJECTED', disabled: false, isPlaceholder: false },
+      ];
+
+      private categoryOptions = [
+        { value: 'PRIVATE', label: 'PRIVATE', disabled: false, isPlaceholder: true },
+        { value: 'INTERNAL', label: 'INTERNAL', disabled: false, isPlaceholder: false },
+        { value: 'EXTERNAL', label: 'EXTERNAL', disabled: false, isPlaceholder: false },
+      ];
 
     public componentDidUpdate(prevProps: Readonly<EditMetaDataModalProps>): void {
         if (this.props.isOpen && !prevProps.isOpen) {
