@@ -39,6 +39,7 @@ import { ClientGeneration, CreateVersionData, EditableMetaData, Services } from 
 import { PleaseWaitModal } from "../../components/modals/pleaseWaitModal";
 import { ChangeOwnerModal } from "./components/modals/changeOwnerModal";
 import { ReferencesTabContent } from "./components/tabs/references";
+import { MarkdownTabContent } from "./components/tabs/markdown";
 
 
 /**
@@ -120,8 +121,9 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             <Tab eventKey={3} title="References" key="references">
                 <ReferencesTabContent artifact={this.state.artifact} artifactType={artifact.type} />
             </Tab>,
-            <Tab eventKey={4} title="Documentation" key="documentation">
-            <DocumentationTabContent artifactContent={this.state.artifactContent} artifactType={artifact.type} />
+            <Tab eventKey={4} title="Documentation" key="markdown">
+            {/* <DocumentationTabContent artifactContent={this.state.artifactContent} artifactType={artifact.type} /> */}
+            <MarkdownTabContent markdownContent="#Hello" />
         </Tab>,
         ];
         if (!this.showDocumentationTab()) {
