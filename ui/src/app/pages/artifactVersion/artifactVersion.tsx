@@ -70,6 +70,7 @@ export interface ArtifactVersionPageState extends PageState {
     uploadFormData: string | null;
     versions: SearchedVersion[] | null;
     invalidContentError: any | null;
+    markdownContent: string;
 }
 
 function is404(e: any) {
@@ -122,9 +123,8 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                 <ReferencesTabContent artifact={this.state.artifact} artifactType={artifact.type} />
             </Tab>,
             <Tab eventKey={4} title="Documentation" key="markdown">
-            {/* <DocumentationTabContent artifactContent={this.state.artifactContent} artifactType={artifact.type} /> */}
-            <MarkdownTabContent markdownContent="#Hello" />
-        </Tab>,
+                <MarkdownTabContent markdownContent={this.state.markdownContent} />
+            </Tab>,
         ];
         if (!this.showDocumentationTab()) {
             tabs.splice(1, 1);
@@ -243,7 +243,8 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             pleaseWaitMessage: "",
             rules: null,
             uploadFormData: null,
-            versions: null
+            versions: null,
+            markdownContent: ""
         };
     }
 
@@ -280,6 +281,19 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                     }
                 }
                 ),
+            Services.getGroupsService().getMarkdownContent(groupId, artifactId, this.versionParam())
+                .then(markdown => this.setSingleState("markdownContent", markdown))
+                .catch(e => {
+                    Services.getLoggerService().warn("Failed to get markdown content: ", e);
+                    if (is404(e)) {
+                        this.setSingleState("markdownContent", "Markdown content is not available for the artifact version (404 Not Found).");
+                    } else {
+                        console.error(e);
+                    }
+                }
+                ),
+            // this.setSingleState("markdownContent", `# Header 1`),
+
             Services.getGroupsService().getArtifactRules(groupId, artifactId).then(rules => this.setSingleState("rules", rules)),
             Services.getGroupsService().getArtifactVersions(groupId, artifactId).then(versions => this.setSingleState("versions", versions.reverse()))
         ];

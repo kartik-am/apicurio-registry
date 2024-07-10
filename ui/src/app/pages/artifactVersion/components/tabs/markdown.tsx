@@ -56,7 +56,7 @@ export class MarkdownTabContent extends PureComponent<MarkdownTabContentProps, M
         }
 
         const response = `
-# heading 1
+# README
 ## heading 2
 ### heading 3
 ~~strikethrough~~  
@@ -83,7 +83,9 @@ export class MarkdownTabContent extends PureComponent<MarkdownTabContentProps, M
 
 
          visualizer = <div>
-            <MarkdownPreview source={response} style={{ padding: 16}}></MarkdownPreview>
+            {/* TODO: Update the component to render the cotnent of the Markdown from the response */}
+            {/* <MarkdownPreview source={response} style={{ padding: 16}}></MarkdownPreview> */}
+            <MarkdownPreview source={this.state.markdownParsedContent} style={{ padding: 16}}></MarkdownPreview>
         </div>
 
 
