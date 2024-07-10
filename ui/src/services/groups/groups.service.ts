@@ -66,6 +66,8 @@ export interface EditableMetaData {
     description: string;
     labels: string[];
     properties: { [key: string]: string|undefined };
+    approvalStatus: string;
+    category: string;
 }
 
 export interface ClientGeneration {
