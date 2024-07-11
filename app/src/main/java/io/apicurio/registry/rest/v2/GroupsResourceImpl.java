@@ -36,10 +36,7 @@ import io.apicurio.registry.rules.RulesService;
 import io.apicurio.registry.storage.*;
 import io.apicurio.registry.storage.dto.*;
 import io.apicurio.registry.storage.impl.sql.RegistryContentUtils;
-import io.apicurio.registry.types.ArtifactState;
-import io.apicurio.registry.types.Current;
-import io.apicurio.registry.types.ReferenceType;
-import io.apicurio.registry.types.RuleType;
+import io.apicurio.registry.types.*;
 import io.apicurio.registry.types.provider.ArtifactTypeUtilProvider;
 import io.apicurio.registry.types.provider.ArtifactTypeUtilProviderFactory;
 import io.apicurio.registry.util.ArtifactIdGenerator;
@@ -624,7 +621,15 @@ public class GroupsResourceImpl implements GroupsResource {
 
         storage.deleteArtifactVersionMetaData(defaultGroupIdToNull(groupId), artifactId, version);
     }
-    
+
+    @Override
+    public Response getMarkdownContent(String groupId, String artifactId, String version) {
+        ContentHandle content = storage.getMarkdownContent(groupId,artifactId,version).getContent();
+        Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
+        return builder.build();
+    }
+
+
     /**
      * @see GroupsResource#addArtifactVersionComment(String, String, String, NewComment)
      */
@@ -654,7 +659,21 @@ public class GroupsResourceImpl implements GroupsResource {
 
         storage.deleteArtifactVersionComment(defaultGroupIdToNull(groupId), artifactId, version, commentId);
     }
-    
+
+    @Override
+    public Response getLatestMarkdownContent(String groupId, String artifactId) {
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+
+        MarkdownContentDto dto = storage.getMarkdownContent(defaultGroupIdToNull(groupId), artifactId);
+        ContentHandle content = dto.getContent();
+        Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
+        return builder.build();
+       // return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, dto.getType(), dto);
+
+    }
+
+
     /**
      * @see GroupsResource#getArtifactVersionComments(String, String, String)
      */
@@ -782,7 +801,7 @@ public class GroupsResourceImpl implements GroupsResource {
             }
 
             //code for markdownContent
-            if(null != data.getMarkdown() || !data.getMarkdown().isEmpty()){
+            if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
                  markdownContent = createMarkdownContent(data.getMarkdown());
             }
             return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(),markdownContent);
@@ -1004,7 +1023,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryVersion, String xRegistryName,
                                                  String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, InputStream data) {
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList());
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList(), null);
     }
 
     /**
@@ -1017,7 +1036,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences());
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), IoUtil.toStream(data.getMarkdown()));
     }
 
     /**
@@ -1033,7 +1052,7 @@ public class GroupsResourceImpl implements GroupsResource {
      * @param data
      * @param references
      */
-    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references) {
+    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references, InputStream markdownContent) {
         // TODO do something with the user-provided version info
         requireParameter("groupId", groupId);
         requireParameter("artifactId", artifactId);

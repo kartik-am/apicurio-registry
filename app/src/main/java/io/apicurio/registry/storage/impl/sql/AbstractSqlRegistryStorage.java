@@ -603,11 +603,12 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                     .bind(1, groupId)
                     .bind(2, artifactId)
                     .bind(3, version)
-                    .bind(2, markdownContentBytes)
+                    .bind(4, markdownContentBytes)
                     .execute();
         }
 
         // Update the "latest" column in the artifacts table with the globalId of the new version
+        java.lang.System.out.println("Updating the latest column in the artifacts table with the globalId of the new version :"+ globalId);
         sql = sqlStatements.updateArtifactLatest();
         handle.createUpdate(sql)
                 .bind(0, globalId)
@@ -3967,6 +3968,86 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             return getLatestArtifactMetaDataInternal(groupId, artifactId, ArtifactRetrievalBehavior.SKIP_DISABLED_LATEST).getVersion();
         }
         return version;
+    }
+
+    @Override
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws ContentNotFoundException, RegistryStorageException{
+        return handles.withHandle(handle -> {
+            String sql = sqlStatements.selectMarkdownContent();
+            return handle.createQuery(sql)
+                    .bind(0, tenantContext().tenantId())
+                    .bind(1, normalizeGroupId(groupId))
+                    .bind(2, artifactId)
+                    .bind(3, resolveVersion(groupId, artifactId, version))
+                    .map(MarkdownContentDtoRowMapper.instance)
+                    .one();
+        });
+    }
+
+    @Override
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException{
+        return this.getMarkdownContent(groupId, artifactId, storageBehaviorProps.getDefaultArtifactRetrievalBehavior());
+    }
+
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, ArtifactRetrievalBehavior behavior)
+            throws ContentNotFoundException, RegistryStorageException {
+        log.debug("Selecting artifact (latest version) markdown-content: {} {} (behavior = {})", groupId, artifactId, behavior);
+        return this.getLatestMarkdownContentInternal(groupId, artifactId, behavior);
+    }
+
+    /**
+     * Internal method to retrieve the meta-data of the latest version of the given artifact.
+     *
+     * @param groupId
+     * @param artifactId
+     */
+    private MarkdownContentDto getLatestMarkdownContentInternal(String groupId, String artifactId, ArtifactRetrievalBehavior behavior) {
+        try {
+            switch (behavior) {
+                case DEFAULT: {
+                    return this.handles.withHandle(handle -> {
+                        Optional<MarkdownContentDto> res = handle.createQuery(sqlStatements.selectLatestMarkdownContent())
+                                .bind(0, tenantContext.tenantId())
+                                .bind(1, normalizeGroupId(groupId))
+                                .bind(2, artifactId)
+                                .map(MarkdownContentDtoRowMapper.instance)
+                                .findOne();
+                        return res.orElseThrow(() -> new MarkdownNotFoundException(groupId, artifactId));
+                    });
+                }
+                case SKIP_DISABLED_LATEST: {
+                    return this.handles.withHandle(handle -> {
+                        // Try the likely option first using a more lightweight query
+                        Optional<MarkdownContentDto> res = handle.createQuery(sqlStatements.selectLatestMarkdownContentSkipDisabledState())
+                                .bind(0, tenantContext.tenantId())
+                                .bind(1, normalizeGroupId(groupId))
+                                .bind(2, artifactId)
+                                .map(MarkdownContentDtoRowMapper.instance)
+                                .findOne();
+                        if (res.isEmpty()) {
+                            // Unlikely, but the latest artifact version may be disabled
+                            res = handle.createQuery(sqlStatements.selectLatestMarkdownContentWithMaxGlobalIDSkipDisabledState())
+                                    .bind(0, tenantContext.tenantId())
+                                    .bind(1, normalizeGroupId(groupId))
+                                    .bind(2, artifactId)
+                                    // INNER:
+                                    .bind(3, tenantContext.tenantId())
+                                    .bind(4, normalizeGroupId(groupId))
+                                    .bind(5, artifactId)
+                                    .map(MarkdownContentDtoRowMapper.instance)
+                                    .findOne();
+                        }
+                        return res.orElseThrow(() -> new MarkdownNotFoundException(groupId, artifactId));
+                    });
+                }
+                default:
+                    throw new UnreachableCodeException();
+            }
+        } catch (MarkdownNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RegistryStorageException(e);
+        }
     }
 
 }

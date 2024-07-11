@@ -949,6 +949,32 @@
           "id": "a485s7t6i90n2"
         }
       },
+      "get - copy": {
+        "tags": [
+          "Metadata"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionMetaData"
+                }
+              }
+            },
+            "description": "The artifact version's metadata."
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        },
+        "operationId": "getArtifactVersionMetaData",
+        "summary": "Get artifact version metadata",
+        "description": "Retrieves the metadata for a single version of the artifact.  The version metadata is \na subset of the artifact metadata and only includes the metadata that is specific to\nthe version (for example, this doesn't include `modifiedOn`).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)\n"
+      },
       "put": {
         "requestBody": {
           "content": {
@@ -1032,6 +1058,58 @@
           "required": true
         }
       ]
+    },
+    "/groups/{groupId}/artifacts/{artifactId}/versions/{version}/markdown": {
+      "summary": "Manage the markdown content for a single version of an artifact in the registry.",
+      "parameters": [
+        {
+          "name": "groupId",
+          "description": "The artifact group ID.  Must be a string provided by the client, representing the name of the grouping of artifacts.",
+          "schema": {
+            "$ref": "#/components/schemas/GroupId"
+          },
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "artifactId",
+          "description": "The artifact ID.  Can be a string (client-provided) or UUID (server-generated), representing the unique artifact identifier.",
+          "schema": {
+            "$ref": "#/components/schemas/ArtifactId"
+          },
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "version",
+          "description": "The unique identifier of a specific version of the artifact content.",
+          "schema": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get Markdown Content based on the version",
+        "operationId": "getMarkdownContent",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MarkdownContent"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "x-stoplight": {
+          "id": "w20xxe8v3wmlt"
+        },
+        "description": "Retrieves the markdown content for a single version of the artifact.  \n\nThis operation can fail for the following reasons:\n\n* No markdown content with this `artifactId` exists (HTTP error `404`)\n* No markdown content with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+        "x-internal": false
+      }
     },
     "/groups/{groupId}/artifacts/{artifactId}/versions/{version}": {
       "summary": "Manage a single version of a single artifact in the registry.",
@@ -3070,6 +3148,32 @@
           "id": "5aa5tq5il6830"
         }
       },
+      "get - copy": {
+        "tags": [
+          "Metadata"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtifactMetaData"
+                }
+              }
+            },
+            "description": "The artifact's metadata."
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        },
+        "operationId": "getArtifactMetaData",
+        "summary": "Get artifact metadata",
+        "description": "Gets the metadata for an artifact in the registry, based on the latest version. If the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used. The returned metadata includes\nboth generated (read-only) and editable metadata (such as name and description).\n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists  or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+      },
       "put": {
         "requestBody": {
           "description": "Updated artifact metadata.",
@@ -3437,7 +3541,47 @@
         }
       ]
     },
-    "x-codegen-contextRoot": "/apis/registry/v2"
+    "x-codegen-contextRoot": "/apis/registry/v2",
+    "/groups/{groupId}/artifacts/{artifactId}/markdown": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "groupId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "artifactId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get Latest Markdown Content",
+        "tags": [],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MarkdownContent"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "operationId": "getLatestMarkdownContent",
+        "x-stoplight": {
+          "id": "1dh1ct8tjakcg"
+        },
+        "description": "Gets the markdownContent for an artifact in the registry, based on the latest version. If the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used. \n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists  or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+      }
+    }
   },
   "components": {
     "schemas": {
@@ -4796,8 +4940,10 @@
             }
           },
           "markdown": {
-            "description": "Raw content of the markdown",
-            "type": "string"
+            "type": "string",
+            "x-stoplight": {
+              "id": "c7agdasgjwrsw"
+            }
           }
         },
         "required": [
@@ -4883,6 +5029,12 @@
         },
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "lrxbc5qgpxj8o"
+            }
+          },
           "name": {
             "type": "string",
             "x-stoplight": {
@@ -5033,6 +5185,16 @@
           }
         },
         "description": "The content of one version of one artifact."
+      },
+      "MarkdownContent": {
+        "description": "The markdown content of one version of one artifact.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FileContent"
+            }
+          }
+        }
       }
     }
   },

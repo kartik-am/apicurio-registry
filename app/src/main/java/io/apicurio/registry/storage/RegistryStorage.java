@@ -880,4 +880,6 @@ public interface RegistryStorage extends DynamicConfigStorage {
     void updateArtifactVersionComment(String groupId, String artifactId, String version, String commentId, String value);
 
     MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws ContentNotFoundException, RegistryStorageException;
+
+    MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException;
 }

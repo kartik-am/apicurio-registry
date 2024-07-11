@@ -1041,4 +1041,14 @@ public abstract class RegistryStorageDecorator implements RegistryStorage {
     public ContentEntity getContentEntityByContentId(long contentId) {
         return delegate.getContentEntityByContentId(contentId);
     }
+
+    @Override
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws ContentNotFoundException, RegistryStorageException{
+        return delegate.getMarkdownContent(groupId,artifactId,version );
+    }
+
+    @Override
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException{
+        return delegate.getMarkdownContent(groupId,artifactId);
+    }
 }
