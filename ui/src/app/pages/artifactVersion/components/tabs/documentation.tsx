@@ -23,6 +23,7 @@ import { RedocStandalone } from "redoc";
 import AsyncApiComponent, { ConfigInterface } from "@asyncapi/react-component";
 import { ErrorTabContent } from "./errorTab";
 import { Services } from "src/services";
+import { JsonEditor } from "json-edit-react";
 
 
 /**
@@ -61,6 +62,10 @@ export class DocumentationTabContent extends PureComponent<DocumentationTabConte
         let visualizer: React.ReactElement | null = null;
         if (this.props.artifactType === "OPENAPI") {
             visualizer = <RedocStandalone spec={this.state.parsedContent} />;
+        }
+
+        if (this.props.artifactType === "JSON") {
+            visualizer = <JsonEditor data={this.state.parsedContent} minWidth="100vw" restrictAdd={ true } restrictEdit={ true } restrictDelete = { true }/>
         }
 
         if(this.props.artifactType === "ASYNCAPI") {

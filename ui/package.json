@@ -70,6 +70,7 @@
     "@uiw/react-markdown-preview": "^4.1.15",
     "ace-builds": "1.18.0",
     "axios": "0.27.2",
+    "json-edit-react": "^1.13.2",
     "keycloak-js": "21.1.1",
     "mobx": "6.9.0",
     "moment": "2.29.4",
