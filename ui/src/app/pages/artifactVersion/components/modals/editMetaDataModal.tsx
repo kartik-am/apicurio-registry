@@ -216,6 +216,8 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
     private doEdit = (): void => {
         const metaData: EditableMetaData = {
             ...this.state.metaData,
+            category: this.state.metaData.category ? this.state.metaData.category : "PRIVATE",
+            approvalStatus: this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus : "DRAFT",
             properties: listToProperties(this.state.properties)
         }
         this.props.onEditMetaData(metaData);
