@@ -130,6 +130,10 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             tabs.splice(1, 1);
         }
 
+        if(!this.state.markdownContent) {
+            tabs.splice(4, 1);
+        }
+
         let groupId: string = this.groupIdParam();
         let hasGroup: boolean = groupId != "default";
         let breadcrumbs = (
@@ -288,7 +292,7 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                     if (is404(e)) {
                         this.setSingleState("markdownContent", "Markdown content is not available for the artifact version (404 Not Found).");
                     } else {
-                        console.error(e);
+                        // TODO: Handle error
                     }
                 }
                 ),
