@@ -56,6 +56,7 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
 
     constructor(props: Readonly<EditMetaDataModalProps>) {
         super(props);
+        this.state = this.initializeState();
     }
 
     public render(): React.ReactElement {
@@ -136,18 +137,19 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                                 <div>
                                     <Dropdown
                                         toggle={
-                                            <DropdownToggle id="form-type-toggle" data-testid="form-type-toggle" onToggle={this.onApprovalStatusToggle} toggleIndicator={CaretDownIcon}>
-                                                { this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus : "DRAFT" }
+                                            <DropdownToggle id="form-approval-type-toggle" data-testid="form-approval-type-toggle" onToggle={this.onApprovalStatusToggle} toggleIndicator={CaretDownIcon} >
+                                                { this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus: "DRAFT" }
                                             </DropdownToggle>
                                         }
                                         onSelect={this.onApprovalStatusSelect}
                                         isOpen={this.state.approvalStatusExpanded}
+                                        menuAppendTo="parent"
                                         dropdownItems={[
                                             <DropdownItem id="DRAFT" key="DRAFT" data-testid="form-type-auto"><i>DRAFT</i></DropdownItem>,
                                             <DropdownItem id="APPROVED" key="APPROVED" data-testid="form-type-auto"><i>APPROVED</i></DropdownItem>,
                                             <DropdownItem id="REJECTED" key="REJECTED" data-testid="form-type-auto"><i>REJECTED</i></DropdownItem>,
                                         ]}
-                                    />
+                                    />  
                                 </div>
                             </FormGroup>
                         </GridItem>
@@ -162,6 +164,7 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                                         }
                                         onSelect={this.onCategorySelect}
                                         isOpen={this.state.categoryExpanded}
+                                        menuAppendTo="parent"
                                         dropdownItems={[
                                             <DropdownItem id="PRIVATE" key="PRIVATE" data-testid="form-type-auto"><i>PRIVATE</i></DropdownItem>,
                                             <DropdownItem id="INTERNAL" key="INTERNAL" data-testid="form-type-auto"><i>INTERNAL</i></DropdownItem>,
@@ -188,7 +191,7 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                     properties: this.props.properties,
                     name: this.props.name,
                     approvalStatus: this.props.approvalStatus,
-                    category: this.props.category
+                    category: this.props.category,
                 },
                 isValid: true
             });
@@ -208,7 +211,7 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                 properties: {},
                 name: "",
                 approvalStatus: "",
-                category: ""
+                category: "",
             }
         };
     }
@@ -216,8 +219,6 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
     private doEdit = (): void => {
         const metaData: EditableMetaData = {
             ...this.state.metaData,
-            category: this.state.metaData.category ? this.state.metaData.category : "PRIVATE",
-            approvalStatus: this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus : "DRAFT",
             properties: listToProperties(this.state.properties)
         }
         this.props.onEditMetaData(metaData);
