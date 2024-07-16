@@ -15,7 +15,7 @@ import lombok.*;
 public class MarkdownContentDto {
 
     private ContentHandle content;
-    private String name;
+    private String version;
 
     public MarkdownContentDto() {
     }

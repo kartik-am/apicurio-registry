@@ -361,7 +361,6 @@ public final class V2ApiUtil {
 
     public static MarkdownContentDto toMarkdownContentDto(ContentHandle markdownContent) {
         MarkdownContentDto markdownContentDto = new MarkdownContentDto();
-        // markdownContentDto.setName(markdownContent.getName());
         markdownContentDto.setContent(markdownContent);
         return markdownContentDto;
     }

@@ -81,6 +81,8 @@ public class ExceptionMapper {
                 return new ConfigPropertyNotFoundException(ex.getError());
             case "InvalidPropertyValueException":
                 return new InvalidPropertyValueException(ex.getError());
+            case "MarkdownNotFoundException":
+                return new MarkdownNotFoundException(ex.getError());
             default:
                 return ex;
         }

@@ -242,7 +242,7 @@ public interface RegistryStorage extends DynamicConfigStorage {
      * @throws RegistryStorageException
      */
     ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                   String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references) throws ArtifactNotFoundException, RegistryStorageException;
+                                                   String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent) throws ArtifactNotFoundException, RegistryStorageException;
 
     /**
      * Get all artifact ids.
@@ -879,7 +879,11 @@ public interface RegistryStorage extends DynamicConfigStorage {
      */
     void updateArtifactVersionComment(String groupId, String artifactId, String version, String commentId, String value);
 
-    MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws ContentNotFoundException, RegistryStorageException;
+    MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws MarkdownNotFoundException, RegistryStorageException;
 
-    MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException;
+    MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws MarkdownNotFoundException, RegistryStorageException;
+
+    void updateMarkdownContent(String groupId, String artifactId, MarkdownContentDto markdownContentDto) throws ArtifactNotFoundException, MarkdownNotFoundException, RegistryStorageException;
+
+    void updateMarkdownContent(String groupId, String artifactId,String version, MarkdownContentDto markdownContentDto) throws MarkdownNotFoundException, RegistryStorageException;
 }

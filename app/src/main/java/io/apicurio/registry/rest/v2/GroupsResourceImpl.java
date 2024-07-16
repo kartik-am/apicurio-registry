@@ -624,9 +624,29 @@ public class GroupsResourceImpl implements GroupsResource {
 
     @Override
     public Response getMarkdownContent(String groupId, String artifactId, String version) {
-        ContentHandle content = storage.getMarkdownContent(groupId,artifactId,version).getContent();
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+        requireParameter("version", version);
+        ContentHandle content = storage.getMarkdownContent(defaultGroupIdToNull(groupId),artifactId,version).getContent();
         Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
         return builder.build();
+    }
+
+    @Override
+    public void updateVersionMarkdownContent(String groupId, String artifactId, String version, InputStream data) {
+
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+        requireParameter("version", version);
+
+        ContentHandle content = ContentHandle.create(data);
+        if (content.bytes().length == 0) {
+            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
+        }
+        MarkdownContentDto dto = V2ApiUtil.toMarkdownContentDto(content);
+
+        storage.updateMarkdownContent(defaultGroupIdToNull(groupId), artifactId,version, dto);
+
     }
 
 
@@ -665,12 +685,26 @@ public class GroupsResourceImpl implements GroupsResource {
         requireParameter("groupId", groupId);
         requireParameter("artifactId", artifactId);
 
-        MarkdownContentDto dto = storage.getMarkdownContent(defaultGroupIdToNull(groupId), artifactId);
-        ContentHandle content = dto.getContent();
+        ContentHandle content = storage.getMarkdownContent(defaultGroupIdToNull(groupId), artifactId).getContent();
         Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
         return builder.build();
-       // return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, dto.getType(), dto);
 
+
+    }
+
+    @Override
+    public void updateMarkdownContent(String groupId, String artifactId, InputStream data) {
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+
+        ContentHandle content = ContentHandle.create(data);
+        if (content.bytes().length == 0) {
+            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
+        }
+
+        MarkdownContentDto dto = V2ApiUtil.toMarkdownContentDto(content);
+
+        storage.updateMarkdownContent(defaultGroupIdToNull(groupId), artifactId, dto);
     }
 
 
@@ -800,7 +834,6 @@ public class GroupsResourceImpl implements GroupsResource {
                 content = IoUtil.toStream(data.getContent());
             }
 
-            //code for markdownContent
             if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
                  markdownContent = createMarkdownContent(data.getMarkdown());
             }
@@ -822,8 +855,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     private InputStream createMarkdownContent(String markdownData) throws NoSuchAlgorithmException, KeyManagementException {
-        MarkdownContent markdownContent = new MarkdownContent();
-        InputStream markdownContentStream = null;
+        InputStream markdownContentStream;
 
         try {
             URL url = new URL(markdownData);
@@ -926,14 +958,11 @@ public class GroupsResourceImpl implements GroupsResource {
             throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
         }
 
-        //markdowncontent related changes
         ContentHandle markdownContentHandle = null;
         if(null != markdownContent ){
             markdownContentHandle = ContentHandle.create(markdownContent);
         }
-//        if (markdownContentHandle.bytes().length == 0) {
-//            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
-//        }
+
 
         // Mitigation for MITM attacks, verify that the artifact is the expected one
         if (xRegistryContentHash != null) {
@@ -1036,7 +1065,11 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), IoUtil.toStream(data.getMarkdown()));
+        InputStream markdownStream = null;
+        if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
+            markdownStream =  IoUtil.toStream(data.getMarkdown());
+        }
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), markdownStream);
     }
 
     /**
@@ -1072,8 +1105,15 @@ public class GroupsResourceImpl implements GroupsResource {
             content = ContentTypeUtil.yamlToJson(content);
         }
 
+        //markdowncontent related changes
+        ContentHandle markdownContentHandle = null;
+        if(null != markdownContent ){
+            markdownContentHandle = ContentHandle.create(markdownContent);
+        }
+
         //Transform the given references into dtos and set the contentId, this will also detect if any of the passed references does not exist.
         final List<ArtifactReferenceDto> referencesAsDtos = toReferenceDtos(references);
+        final MarkdownContentDto markdownContentDto = V2ApiUtil.toMarkdownContentDto(markdownContentHandle);
 
         //Try to resolve the new artifact references and the nested ones (if any)
         final Map<String, ContentHandle> resolvedReferences = RegistryContentUtils.recursivelyResolveReferences(referencesAsDtos, storage::getContentByReference);
@@ -1081,7 +1121,7 @@ public class GroupsResourceImpl implements GroupsResource {
         String artifactType = lookupArtifactType(groupId, artifactId);
         rulesService.applyRules(defaultGroupIdToNull(groupId), artifactId, artifactType, content, RuleApplicationType.UPDATE, references, resolvedReferences);
         EditableArtifactMetaDataDto metaData = getEditableMetaData(artifactName, artifactDescription);
-        ArtifactMetaDataDto amd = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
+        ArtifactMetaDataDto amd = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentDto.getContent());
         return V2ApiUtil.dtoToVersionMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, amd);
     }
 
@@ -1189,7 +1229,7 @@ public class GroupsResourceImpl implements GroupsResource {
 
         rulesService.applyRules(defaultGroupIdToNull(groupId), artifactId, artifactType, content, RuleApplicationType.UPDATE, references, resolvedReferences);
         EditableArtifactMetaDataDto metaData = getEditableMetaData(name, description);
-        ArtifactMetaDataDto dto = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, version, artifactType, content, metaData, referencesAsDtos);
+        ArtifactMetaDataDto dto = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, version, artifactType, content, metaData, referencesAsDtos, null);
         return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, dto);
     }
 

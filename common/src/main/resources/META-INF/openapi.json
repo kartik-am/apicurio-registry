@@ -1098,10 +1098,10 @@
             "$ref": "#/components/responses/MarkdownContent"
           },
           "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error"
+            "$ref": "#/components/responses/ServerError"
           }
         },
         "x-stoplight": {
@@ -1109,6 +1109,35 @@
         },
         "description": "Retrieves the markdown content for a single version of the artifact.  \n\nThis operation can fail for the following reasons:\n\n* No markdown content with this `artifactId` exists (HTTP error `404`)\n* No markdown content with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
         "x-internal": false
+      },
+      "put": {
+        "summary": "Update Markdown Content based on the Version",
+        "operationId": "updateVersionMarkdownContent",
+        "responses": {
+          "204": {
+            "description": "The artifact version's markdown content was successfully updated."
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        },
+        "x-stoplight": {
+          "id": "twxod6u4zq8z2"
+        },
+        "description": "Retrieves the markdown for a single version of the artifact.  \n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists (HTTP error `404`)\n* No version with this `version` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/FileContent"
+              }
+            }
+          },
+          "description": ""
+        }
       }
     },
     "/groups/{groupId}/artifacts/{artifactId}/versions/{version}": {
@@ -3569,10 +3598,10 @@
             "$ref": "#/components/responses/MarkdownContent"
           },
           "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error"
+            "$ref": "#/components/responses/ServerError"
           }
         },
         "operationId": "getLatestMarkdownContent",
@@ -3580,6 +3609,35 @@
           "id": "1dh1ct8tjakcg"
         },
         "description": "Gets the markdownContent for an artifact in the registry, based on the latest version. If the latest version of the artifact is marked as `DISABLED`, the next available non-disabled version will be used. \n\nThis operation can fail for the following reasons:\n\n* No artifact with this `artifactId` exists  or all versions are `DISABLED` (HTTP error `404`)\n* A server error occurred (HTTP error `500`)"
+      },
+      "put": {
+        "summary": "Update Markdown Content",
+        "operationId": "updateMarkdownContent",
+        "responses": {
+          "204": {
+            "description": "The markdown content was updated."
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        },
+        "x-stoplight": {
+          "id": "ohhjrvwe2m5jw"
+        },
+        "description": "Updates the markdown content of the latest artifact.  \n\nThis operation can fail for the following reasons:\n\n* No artifact with the `artifactId` exists (HTTP error `404`)\n* A server error occurred (HTTP error `500`)",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/FileContent"
+              }
+            }
+          },
+          "description": ""
+        }
       }
     }
   },
@@ -5029,18 +5087,6 @@
         },
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "x-stoplight": {
-              "id": "lrxbc5qgpxj8o"
-            }
-          },
-          "name": {
-            "type": "string",
-            "x-stoplight": {
-              "id": "asmejwn2ehgkk"
-            }
-          },
           "content": {
             "type": "string",
             "x-stoplight": {
@@ -5189,7 +5235,7 @@
       "MarkdownContent": {
         "description": "The markdown content of one version of one artifact.",
         "content": {
-          "application/json": {
+          "*/*": {
             "schema": {
               "$ref": "#/components/schemas/FileContent"
             }

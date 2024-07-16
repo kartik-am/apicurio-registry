@@ -261,9 +261,9 @@ public abstract class RegistryStorageDecorator implements RegistryStorage {
     @Override
     public ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId,
                                                           String version, String artifactType, ContentHandle content,
-                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references) throws ArtifactNotFoundException, RegistryStorageException {
+                                                          EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent) throws ArtifactNotFoundException, RegistryStorageException {
         return delegate.updateArtifactWithMetadata(groupId, artifactId, version, artifactType, content,
-                metaData, references);
+                metaData, references, markdownContent);
     }
 
     /**
@@ -1050,5 +1050,15 @@ public abstract class RegistryStorageDecorator implements RegistryStorage {
     @Override
     public MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException{
         return delegate.getMarkdownContent(groupId,artifactId);
+    }
+
+    public void updateMarkdownContent(String groupId, String artifactId, MarkdownContentDto markdownContentDto) throws MarkdownNotFoundException, RegistryStorageException{
+        delegate.updateMarkdownContent(groupId,artifactId,markdownContentDto);
+
+    }
+
+    public void updateMarkdownContent(String groupId, String artifactId,String version, MarkdownContentDto markdownContentDto) throws MarkdownNotFoundException, RegistryStorageException{
+        delegate.updateMarkdownContent(groupId,artifactId,version,markdownContentDto);
+
     }
 }

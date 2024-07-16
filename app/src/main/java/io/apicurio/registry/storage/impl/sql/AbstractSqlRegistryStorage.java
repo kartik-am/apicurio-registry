@@ -592,19 +592,31 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
             });
         }
 
-        //Insert markdowncontent in the markdown table - Kajal **
         if(null!= markdownContent) {
             // Get the content as a byte array (for storage in the DB)
             byte[] markdownContentBytes = markdownContent.bytes();
             // Insert markdown content into the "markdown" table
-            sql = sqlStatements.insertMarkdown();
-            handle.createUpdate(sql)
-                    .bind(0, tenantContext.tenantId())
-                    .bind(1, groupId)
-                    .bind(2, artifactId)
-                    .bind(3, version)
-                    .bind(4, markdownContentBytes)
-                    .execute();
+            sql = sqlStatements.insertMarkdown(firstVersion);
+            if(firstVersion){
+                handle.createUpdate(sql)
+                        .bind(0, tenantContext.tenantId())
+                        .bind(1, normalizeGroupId(groupId))
+                        .bind(2, artifactId)
+                        .bind(3, version)
+                        .bind(4, markdownContentBytes)
+                        .execute();
+            }else{
+                handle.createUpdate(sql)
+                        .bind(0, tenantContext.tenantId())
+                        .bind(1, normalizeGroupId(groupId))
+                        .bind(2, artifactId)
+                        .bind(3, tenantContext.tenantId())
+                        .bind(4, groupId)
+                        .bind(5, artifactId)
+                        .bind(6, markdownContentBytes)
+                        .execute();
+            }
+
         }
 
         // Update the "latest" column in the artifacts table with the globalId of the new version
@@ -1043,7 +1055,7 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
 
     protected ArtifactMetaDataDto updateArtifact(String groupId, String artifactId, String version, String artifactType,
                                                  ContentHandle content, List<ArtifactReferenceDto> references, IdGenerator globalIdGenerator) throws ArtifactNotFoundException, RegistryStorageException {
-        return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, content, null, references, globalIdGenerator);
+        return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, content, null, references, globalIdGenerator, null);
     }
 
     /**
@@ -1052,14 +1064,14 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
     @Override
     @Transactional
     public ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId, String version,
-                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references)
+                                                          String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references, ContentHandle markdownContent)
             throws ArtifactNotFoundException, RegistryStorageException {
-        return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references, null);
+        return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, content, metaData, references, null, markdownContent);
     }
 
     protected ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId, String version,
                                                              String artifactType, ContentHandle content, EditableArtifactMetaDataDto metaData, List<ArtifactReferenceDto> references,
-                                                             IdGenerator globalIdGenerator) throws ArtifactNotFoundException, RegistryStorageException {
+                                                             IdGenerator globalIdGenerator, ContentHandle markdownContent) throws ArtifactNotFoundException, RegistryStorageException {
 
         String createdBy = securityIdentity.getPrincipal().getName();
         Date createdOn = new Date();
@@ -1075,27 +1087,43 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         }
 
         return updateArtifactWithMetadata(groupId, artifactId, version, artifactType, contentId, createdBy, createdOn,
-                metaData, globalIdGenerator);
+                metaData, globalIdGenerator, markdownContent);
     }
 
     protected ArtifactMetaDataDto updateArtifactWithMetadata(String groupId, String artifactId, String version,
                                                              String artifactType, long contentId, String createdBy, Date createdOn, EditableArtifactMetaDataDto metaData,
-                                                             IdGenerator globalIdGenerator)
+                                                             IdGenerator globalIdGenerator, ContentHandle markdownContent)
             throws ArtifactNotFoundException, RegistryStorageException {
 
         log.debug("Updating artifact {} {} with a new version (content).", groupId, artifactId);
 
         //For the update we want to get meta-data from previous (latest) existing version, no matter the state.
         ArtifactMetaDataDto latest = this.getLatestArtifactMetaDataInternal(groupId, artifactId, DEFAULT);
+        MarkdownContentDto latestMarkdownContentDto = null;
+
+        //For the update we want to get markdown from previous (latest) existing version, no matter the state.
+        //If previous is not available, we assume that the old version of creating and updating artifact without
+        //markdown is used, hence catch the exception and set the latestMarkdownContentDto to null to make it
+        //backward compatible.
+        try {
+            latestMarkdownContentDto = this.getLatestMarkdownContentInternal(groupId, artifactId, DEFAULT);
+        } catch (Exception e) {
+            latestMarkdownContentDto = null;
+        }
 
         try {
             // Create version and return
+            MarkdownContentDto finalLatestMarkdownContentDto = latestMarkdownContentDto;
             return handles.withHandle(handle -> {
                 // Metadata comes from the latest version
                 String name = latest.getName();
                 String description = latest.getDescription();
                 List<String> labels = latest.getLabels();
                 Map<String, String> properties = latest.getProperties();
+                ContentHandle finalMarkdownContent = null;
+                if(null != finalLatestMarkdownContentDto){
+                    finalMarkdownContent = finalLatestMarkdownContentDto.getContent();
+                }
 
                 // Provided metadata will override inherited values from latest version
                 if (metaData.getName() != null) {
@@ -1110,10 +1138,13 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                 if (metaData.getProperties() != null) {
                     properties = metaData.getProperties();
                 }
+                if(null != markdownContent){
+                    finalMarkdownContent = markdownContent;
+                }
 
                 // Now create the version and return the new version metadata.
                 ArtifactVersionMetaDataDto versionDto = this.createArtifactVersion(handle, artifactType, false, groupId, artifactId, version,
-                        name, description, labels, properties, createdBy, createdOn, contentId, globalIdGenerator, null);
+                        name, description, labels, properties, createdBy, createdOn, contentId, globalIdGenerator, finalMarkdownContent);
                 ArtifactMetaDataDto dto = versionToArtifactDto(groupId, artifactId, versionDto);
                 dto.setCreatedOn(latest.getCreatedOn());
                 dto.setCreatedBy(latest.getCreatedBy());
@@ -3971,26 +4002,33 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
     }
 
     @Override
-    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws ContentNotFoundException, RegistryStorageException{
-        return handles.withHandle(handle -> {
-            String sql = sqlStatements.selectMarkdownContent();
-            return handle.createQuery(sql)
-                    .bind(0, tenantContext().tenantId())
-                    .bind(1, normalizeGroupId(groupId))
-                    .bind(2, artifactId)
-                    .bind(3, resolveVersion(groupId, artifactId, version))
-                    .map(MarkdownContentDtoRowMapper.instance)
-                    .one();
-        });
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, String version) throws MarkdownNotFoundException, RegistryStorageException{
+        try {
+            return this.handles.withHandle(handle -> {
+                String sql = sqlStatements.selectMarkdownContent();
+                Optional<MarkdownContentDto> res = handle.createQuery(sql)
+                        .bind(0, tenantContext().tenantId())
+                        .bind(1, normalizeGroupId(groupId))
+                        .bind(2, artifactId)
+                        .bind(3, resolveVersion(groupId, artifactId, version))
+                        .map(MarkdownContentDtoRowMapper.instance)
+                        .findOne();
+                return res.orElseThrow(() -> new MarkdownNotFoundException(groupId, artifactId));
+            });
+        } catch (MarkdownNotFoundException e) {
+            throw e;
+        }catch(Exception e){
+            throw new RegistryStorageException(e);
+        }
     }
 
     @Override
-    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws ContentNotFoundException, RegistryStorageException{
+    public MarkdownContentDto getMarkdownContent(String groupId, String artifactId) throws MarkdownNotFoundException, RegistryStorageException{
         return this.getMarkdownContent(groupId, artifactId, storageBehaviorProps.getDefaultArtifactRetrievalBehavior());
     }
 
     public MarkdownContentDto getMarkdownContent(String groupId, String artifactId, ArtifactRetrievalBehavior behavior)
-            throws ContentNotFoundException, RegistryStorageException {
+            throws MarkdownNotFoundException, RegistryStorageException {
         log.debug("Selecting artifact (latest version) markdown-content: {} {} (behavior = {})", groupId, artifactId, behavior);
         return this.getLatestMarkdownContentInternal(groupId, artifactId, behavior);
     }
@@ -4050,4 +4088,42 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
         }
     }
 
+    @Override
+   public void updateMarkdownContent(String groupId, String artifactId, MarkdownContentDto markdownContentDto) throws ArtifactNotFoundException, MarkdownNotFoundException, RegistryStorageException{
+        log.debug("Updating markdown for an artifact: {} {}", groupId, artifactId);
+
+        ArtifactMetaDataDto dto = this.getLatestArtifactMetaDataInternal(groupId, artifactId, storageBehaviorProps.getDefaultArtifactRetrievalBehavior());
+        internalUpdateMarkdown(groupId, artifactId, dto.getVersion(), markdownContentDto.getContent());
+    }
+
+    private void internalUpdateMarkdown(String groupId, String artifactId, String version, ContentHandle markdownContent) {
+
+        try {
+            this.handles.withHandle(handle -> {
+                String sql = sqlStatements.updateMarkdown();
+                int rowCount = handle.createUpdate(sql)
+                        .bind(0, markdownContent.bytes())
+                        .bind(1, tenantContext.tenantId())
+                        .bind(2, groupId)
+                        .bind(3, artifactId)
+                        .bind(4, version)
+                        .execute();
+                if (rowCount == 0) {
+                    throw new MarkdownNotFoundException(groupId, artifactId);
+                }
+                return null;
+        });
+        } catch (MarkdownNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RegistryStorageException(e);
+        }
+
+    }
+
+    @Override
+   public void updateMarkdownContent(String groupId, String artifactId,String version, MarkdownContentDto markdownContentDto) throws MarkdownNotFoundException, RegistryStorageException{
+        log.debug("Updating markdown for an artifact: {} {} {}", groupId, artifactId, version);
+        internalUpdateMarkdown(groupId, artifactId, version, markdownContentDto.getContent());
+    }
 }

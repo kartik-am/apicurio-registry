@@ -435,7 +435,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
 
         ContentHandle contentv2 = ContentHandle.create(OPENAPI_CONTENT_V2);
         EditableArtifactMetaDataDto metaData = new EditableArtifactMetaDataDto("NAME", "DESC", Collections.singletonList("LBL"), Collections.singletonMap("K", "V"));
-        ArtifactMetaDataDto dtov2 = storage().updateArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, contentv2, metaData, null);
+        ArtifactMetaDataDto dtov2 = storage().updateArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, contentv2, metaData, null, null);
         Assertions.assertNotNull(dtov2);
         Assertions.assertEquals(GROUP_ID, dtov2.getGroupId());
         Assertions.assertEquals(artifactId, dtov2.getId());
@@ -1004,7 +1004,7 @@ public abstract class AbstractRegistryStorageTest extends AbstractResourceTestBa
                     artifactId + "-description-" + idx,
                     null,
                     null);
-            storage().updateArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null);
+            storage().updateArtifactWithMetadata(GROUP_ID, artifactId, null, ArtifactType.OPENAPI, content, metaData, null, null);
         }
 
         TestUtils.retry(() -> {

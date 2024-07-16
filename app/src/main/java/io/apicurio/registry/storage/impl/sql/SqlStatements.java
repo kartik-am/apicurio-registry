@@ -653,7 +653,7 @@ public interface SqlStatements {
      */
     public String selectArtifactVersionsSkipDisabled();
 
-    public String insertMarkdown();
+    public String insertMarkdown(boolean firstVersion);
 
     public String selectMarkdownContent();
 
@@ -674,5 +674,7 @@ public interface SqlStatements {
      * This is used in case the latest version referenced by the artifact is DISABLED.
      */
     String selectLatestMarkdownContentWithMaxGlobalIDSkipDisabledState();
+
+    public String updateMarkdown();
 
 }

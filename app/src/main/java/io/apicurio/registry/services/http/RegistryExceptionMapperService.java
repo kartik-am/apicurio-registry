@@ -41,26 +41,7 @@ import io.apicurio.registry.rules.DefaultRuleDeletionException;
 import io.apicurio.registry.rules.RuleViolation;
 import io.apicurio.registry.rules.RuleViolationException;
 import io.apicurio.registry.rules.UnprocessableSchemaException;
-import io.apicurio.registry.storage.AlreadyExistsException;
-import io.apicurio.registry.storage.ArtifactAlreadyExistsException;
-import io.apicurio.registry.storage.ArtifactNotFoundException;
-import io.apicurio.registry.storage.ConfigPropertyNotFoundException;
-import io.apicurio.registry.storage.ContentNotFoundException;
-import io.apicurio.registry.storage.DownloadNotFoundException;
-import io.apicurio.registry.storage.GroupNotFoundException;
-import io.apicurio.registry.storage.InvalidArtifactIdException;
-import io.apicurio.registry.storage.InvalidArtifactStateException;
-import io.apicurio.registry.storage.InvalidArtifactTypeException;
-import io.apicurio.registry.storage.InvalidGroupIdException;
-import io.apicurio.registry.storage.InvalidPropertyValueException;
-import io.apicurio.registry.storage.LogConfigurationNotFoundException;
-import io.apicurio.registry.storage.NotFoundException;
-import io.apicurio.registry.storage.RoleMappingAlreadyExistsException;
-import io.apicurio.registry.storage.RoleMappingNotFoundException;
-import io.apicurio.registry.storage.RuleAlreadyExistsException;
-import io.apicurio.registry.storage.RuleNotFoundException;
-import io.apicurio.registry.storage.VersionAlreadyExistsException;
-import io.apicurio.registry.storage.VersionNotFoundException;
+import io.apicurio.registry.storage.*;
 import io.apicurio.rest.client.auth.exception.ForbiddenException;
 import io.apicurio.rest.client.auth.exception.NotAuthorizedException;
 import io.apicurio.tenantmanager.client.exception.TenantManagerClientException;
@@ -159,6 +140,7 @@ public class RegistryExceptionMapperService {
         map.put(SchemaSoftDeletedException.class, HTTP_CONFLICT);
         map.put(SubjectNotSoftDeletedException.class, HTTP_CONFLICT);
         map.put(SubjectSoftDeletedException.class, HTTP_NOT_FOUND);
+        map.put(MarkdownNotFoundException.class, HTTP_NOT_FOUND);
         // TODO Merge this list with io.apicurio.registry.rest.RegistryExceptionMapper
         CODE_MAP = Collections.unmodifiableMap(map);
     }

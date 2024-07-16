@@ -425,7 +425,7 @@ public class ApiServiceImpl implements ApiService {
             EditableArtifactMetaDataDto dto = new EditableArtifactMetaDataDto();
             dto.setName(newSchemaVersion.getVersion());
             try {
-                ArtifactMetaDataDto amdd = storage.updateArtifactWithMetadata(null, schemaid, null, ArtifactType.AVRO, body, dto, null);
+                ArtifactMetaDataDto amdd = storage.updateArtifactWithMetadata(null, schemaid, null, ArtifactType.AVRO, body, dto, null, null);
                 handleArtifactCreation(response, schemaid, amdd);
             } catch (Exception e) {
                 response.resume(e);

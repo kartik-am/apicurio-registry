@@ -24,11 +24,7 @@ import io.apicurio.registry.rest.v2.beans.Error;
 import io.apicurio.registry.rules.RuleViolationException;
 import io.apicurio.registry.services.http.ErrorHttpResponse;
 import io.apicurio.registry.services.http.RegistryExceptionMapperService;
-import io.apicurio.registry.storage.AlreadyExistsException;
-import io.apicurio.registry.storage.ArtifactAlreadyExistsException;
-import io.apicurio.registry.storage.ArtifactNotFoundException;
-import io.apicurio.registry.storage.ContentNotFoundException;
-import io.apicurio.registry.storage.VersionNotFoundException;
+import io.apicurio.registry.storage.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -82,6 +78,7 @@ public class RegistryExceptionMapper implements ExceptionMapper<Throwable> {
         map.put(SubjectSoftDeletedException.class, ErrorCode.SUBJECT_SOFT_DELETED.value());
         map.put(ReferenceExistsException.class, ErrorCode.REFERENCE_EXISTS.value());
         map.put(SchemaNotFoundException.class, ErrorCode.SCHEMA_NOT_FOUND.value());
+        map.put(MarkdownNotFoundException.class, ErrorCode.SCHEMA_NOT_FOUND.value());
         CONFLUENT_CODE_MAP = Collections.unmodifiableMap(map);
     }
 

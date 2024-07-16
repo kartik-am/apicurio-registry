@@ -19,6 +19,7 @@ public class MarkdownContentDtoRowMapper implements RowMapper<MarkdownContentDto
     public MarkdownContentDto map(ResultSet rs) throws SQLException {
         return MarkdownContentDto.builder()
                 .content(ContentHandle.create(rs.getBytes("content")))
+                .version("version")
                 .build();
     }
 }
