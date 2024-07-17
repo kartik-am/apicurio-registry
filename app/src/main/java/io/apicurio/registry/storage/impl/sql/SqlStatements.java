@@ -653,4 +653,28 @@ public interface SqlStatements {
      */
     public String selectArtifactVersionsSkipDisabled();
 
+    public String insertMarkdown(boolean firstVersion);
+
+    public String selectMarkdownContent();
+
+    /**
+     * A statement to get a single artifact (latest version) markdown content by artifactId.
+     */
+    String selectLatestMarkdownContent();
+
+    /**
+     * A statement to get a single artifact (latest version) markdown content by artifactId.
+     * Skips DISABLED versions.
+     */
+    String selectLatestMarkdownContentSkipDisabledState();
+
+    /**
+     * A statement to get a single artifact (latest version) markdown content by artifactId.
+     * Tries to find a non-DISABLED version with the highest global ID.
+     * This is used in case the latest version referenced by the artifact is DISABLED.
+     */
+    String selectLatestMarkdownContentWithMaxGlobalIDSkipDisabledState();
+
+    public String updateMarkdown();
+
 }

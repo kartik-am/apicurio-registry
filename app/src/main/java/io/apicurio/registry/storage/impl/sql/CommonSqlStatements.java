@@ -1125,4 +1125,59 @@ public abstract class CommonSqlStatements implements SqlStatements {
         return "UPDATE comments SET cvalue = ? WHERE tenantId = ? AND globalId = ? AND commentId = ? AND createdBy = ?";
     }
 
+    public String insertMarkdown(boolean firstVersion) {
+        if(firstVersion){
+            return "INSERT INTO markdown (tenantId, groupId, artifactId, version, content) VALUES (?, ?, ?, ?, ?)";
+        }else{
+            return "INSERT INTO markdown (tenantId, groupId, artifactId, version, content) VALUES (?, ?, ?, (SELECT MAX(version) FROM versions WHERE tenantId = ? AND groupId = ? AND artifactId = ?), ?)";
+        }
+
+    }
+
+    public String selectMarkdownContent(){
+        return "SELECT content FROM markdown WHERE tenantId = ? AND groupId = ? AND artifactId = ? AND version = ?";
+
+    };
+
+    /**
+     * @see io.apicurio.registry.storage.impl.sql.SqlStatements#selectLatestMarkdownContent()
+     */
+    @Override
+    public String selectLatestMarkdownContent() {
+       // return "SELECT content FROM markdown WHERE tenantId = ? AND groupId = ? AND artifactId = ? AND version = (SELECT MAX(version) FROM versions WHERE tenantId = ? AND groupId = ? AND artifactId = ?)";
+       return "SELECT m.content, m.version FROM markdown m "
+                + "JOIN versions v ON m.tenantId = v.tenantId AND m.groupId = v.groupId AND m.artifactId = v.artifactId AND m.version = v.version "
+                + "JOIN artifacts a ON v.tenantId = a.tenantId AND v.globalId = a.latest "
+                + "WHERE m.tenantId = ? AND m.groupId = ? AND m.artifactId = ?";
+
+    }
+
+    /**
+     * @see io.apicurio.registry.storage.impl.sql.SqlStatements#selectLatestMarkdownContentSkipDisabledState()
+     */
+    @Override
+    public String selectLatestMarkdownContentSkipDisabledState() {
+        return "SELECT m.content, m.version FROM markdown m "
+                + "JOIN versions v ON m.tenantId = v.tenantId AND m.groupId = v.groupId AND m.artifactId = v.artifactId AND m.version = v.version "
+                + "JOIN artifacts a ON v.tenantId = a.tenantId AND v.globalId = a.latest "
+                + "WHERE m.tenantId = ? AND m.groupId = ? AND m.artifactId = ? AND v.state != 'DISABLED'" ;
+    }
+
+    @Override
+    public String selectLatestMarkdownContentWithMaxGlobalIDSkipDisabledState() {
+        var inner = "SELECT MAX(v.globalId) "
+                + "FROM versions v "
+                + "WHERE v.tenantId = ? AND v.groupId = ? AND v.artifactId = ? AND v.state != 'DISABLED'";
+
+        return "SELECT m.content, m.version FROM markdown m "
+                + "JOIN versions v ON m.tenantId = v.tenantId AND m.groupId = v.groupId AND m.artifactId = v.artifactId AND m.version = v.version "
+                + "WHERE m.tenantId = ? AND m.groupId = ? AND m.artifactId = ? AND v.globalId IN (" + inner + ")";
+    }
+
+    @Override
+    public String updateMarkdown()
+    {
+        return "UPDATE markdown SET content = ? WHERE tenantId = ? AND groupId = ? AND artifactId = ? AND version = ?";
+    }
+
 }

@@ -33,32 +33,10 @@ import io.apicurio.registry.rest.v2.beans.*;
 import io.apicurio.registry.rest.v2.shared.CommonResourceOperations;
 import io.apicurio.registry.rules.RuleApplicationType;
 import io.apicurio.registry.rules.RulesService;
-import io.apicurio.registry.storage.ArtifactAlreadyExistsException;
-import io.apicurio.registry.storage.ArtifactNotFoundException;
-import io.apicurio.registry.storage.InvalidArtifactIdException;
-import io.apicurio.registry.storage.InvalidGroupIdException;
-import io.apicurio.registry.storage.RegistryStorage;
-import io.apicurio.registry.storage.VersionNotFoundException;
-import io.apicurio.registry.storage.dto.ArtifactMetaDataDto;
-import io.apicurio.registry.storage.dto.ArtifactOwnerDto;
-import io.apicurio.registry.storage.dto.ArtifactReferenceDto;
-import io.apicurio.registry.storage.dto.ArtifactSearchResultsDto;
-import io.apicurio.registry.storage.dto.ArtifactVersionMetaDataDto;
-import io.apicurio.registry.storage.dto.CommentDto;
-import io.apicurio.registry.storage.dto.EditableArtifactMetaDataDto;
-import io.apicurio.registry.storage.dto.GroupMetaDataDto;
-import io.apicurio.registry.storage.dto.GroupSearchResultsDto;
-import io.apicurio.registry.storage.dto.OrderBy;
-import io.apicurio.registry.storage.dto.OrderDirection;
-import io.apicurio.registry.storage.dto.RuleConfigurationDto;
-import io.apicurio.registry.storage.dto.SearchFilter;
-import io.apicurio.registry.storage.dto.StoredArtifactDto;
-import io.apicurio.registry.storage.dto.VersionSearchResultsDto;
+import io.apicurio.registry.storage.*;
+import io.apicurio.registry.storage.dto.*;
 import io.apicurio.registry.storage.impl.sql.RegistryContentUtils;
-import io.apicurio.registry.types.ArtifactState;
-import io.apicurio.registry.types.Current;
-import io.apicurio.registry.types.ReferenceType;
-import io.apicurio.registry.types.RuleType;
+import io.apicurio.registry.types.*;
 import io.apicurio.registry.types.provider.ArtifactTypeUtilProvider;
 import io.apicurio.registry.types.provider.ArtifactTypeUtilProviderFactory;
 import io.apicurio.registry.util.ArtifactIdGenerator;
@@ -68,6 +46,17 @@ import io.apicurio.registry.utils.ArtifactIdValidator;
 import io.apicurio.registry.utils.IoUtil;
 import io.apicurio.registry.utils.JAXRSClientUtil;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.NotAllowedException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.jose4j.base64url.Base64;
 
 import java.io.BufferedInputStream;
@@ -80,25 +69,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.interceptor.Interceptors;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.NotAllowedException;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 import static io.apicurio.common.apps.logging.audit.AuditingConstants.*;
 import static io.apicurio.registry.logging.audit.AuditingConstants.KEY_OWNER;
@@ -187,7 +160,7 @@ public class GroupsResourceImpl implements GroupsResource {
     }
 
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#updateArtifact(String, String, String, String, String, String, String, InputStream)
+     * @see GroupsResource#updateArtifact(String, String, String, String, String, String, String, InputStream)
      */
     @Override
     @Audited(extractParameters = {"0", KEY_GROUP_ID, "1", KEY_ARTIFACT_ID, "2", KEY_VERSION, "3", KEY_NAME, "4", KEY_NAME_ENCODED, "5", KEY_DESCRIPTION, "6", KEY_DESCRIPTION_ENCODED})
@@ -654,7 +627,35 @@ public class GroupsResourceImpl implements GroupsResource {
 
         storage.deleteArtifactVersionMetaData(defaultGroupIdToNull(groupId), artifactId, version);
     }
-    
+
+    @Override
+    public Response getMarkdownContent(String groupId, String artifactId, String version) {
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+        requireParameter("version", version);
+        ContentHandle content = storage.getMarkdownContent(defaultGroupIdToNull(groupId),artifactId,version).getContent();
+        Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
+        return builder.build();
+    }
+
+    @Override
+    public void updateVersionMarkdownContent(String groupId, String artifactId, String version, InputStream data) {
+
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+        requireParameter("version", version);
+
+        ContentHandle content = ContentHandle.create(data);
+        if (content.bytes().length == 0) {
+            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
+        }
+        MarkdownContentDto dto = V2ApiUtil.toMarkdownContentDto(content);
+
+        storage.updateMarkdownContent(defaultGroupIdToNull(groupId), artifactId,version, dto);
+
+    }
+
+
     /**
      * @see io.apicurio.registry.rest.v2.GroupsResource#addArtifactVersionComment(java.lang.String, java.lang.String, java.lang.String, io.apicurio.registry.rest.v2.beans.NewComment)
      */
@@ -684,9 +685,37 @@ public class GroupsResourceImpl implements GroupsResource {
 
         storage.deleteArtifactVersionComment(defaultGroupIdToNull(groupId), artifactId, version, commentId);
     }
-    
+
+    @Override
+    public Response getLatestMarkdownContent(String groupId, String artifactId) {
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+
+        ContentHandle content = storage.getMarkdownContent(defaultGroupIdToNull(groupId), artifactId).getContent();
+        Response.ResponseBuilder builder = Response.ok(content, ArtifactMediaTypes.BINARY);
+        return builder.build();
+
+
+    }
+
+    @Override
+    public void updateMarkdownContent(String groupId, String artifactId, InputStream data) {
+        requireParameter("groupId", groupId);
+        requireParameter("artifactId", artifactId);
+
+        ContentHandle content = ContentHandle.create(data);
+        if (content.bytes().length == 0) {
+            throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
+        }
+
+        MarkdownContentDto dto = V2ApiUtil.toMarkdownContentDto(content);
+
+        storage.updateMarkdownContent(defaultGroupIdToNull(groupId), artifactId, dto);
+    }
+
+
     /**
-     * @see io.apicurio.registry.rest.v2.GroupsResource#getArtifactVersionComments(java.lang.String, java.lang.String, java.lang.String)
+     * @see GroupsResource#getArtifactVersionComments(String, String, String)
      */
     @Override
     @Authorized(style = AuthorizedStyle.GroupAndArtifact, level = AuthorizedLevel.Read)
@@ -782,7 +811,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                            String xRegistryDescription, String xRegistryDescriptionEncoded,
                                            String xRegistryName, String xRegistryNameEncoded,
                                            String xRegistryContentHash, String xRegistryHashAlgorithm, InputStream data) {
-        return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, data, Collections.emptyList(), null);
+        return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, data, Collections.emptyList(), null, null);
     }
 
     /**
@@ -800,6 +829,8 @@ public class GroupsResourceImpl implements GroupsResource {
 
         Client client = null;
         InputStream content;
+        InputStream markdownContent = null;
+
         try {
             try {
                 URL url = new URL(data.getContent());
@@ -809,7 +840,10 @@ public class GroupsResourceImpl implements GroupsResource {
                 content = IoUtil.toStream(data.getContent());
             }
 
-            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(), data.getAdditonalDetails());
+            if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
+                markdownContent = createMarkdownContent(data.getMarkdown());
+            }
+            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(), data.getAdditonalDetails(), markdownContent);
         } catch (KeyManagementException kme) {
             throw new RuntimeException(kme);
         } catch (NoSuchAlgorithmException nsae) {
@@ -824,6 +858,20 @@ public class GroupsResourceImpl implements GroupsResource {
     public enum RegistryHashAlgorithm {
         SHA256,
         MD5
+    }
+
+    private InputStream createMarkdownContent(String markdownData) throws NoSuchAlgorithmException, KeyManagementException {
+        InputStream markdownContentStream;
+
+        try {
+            URL url = new URL(markdownData);
+            Client client = JAXRSClientUtil.getJAXRSClient(restConfig.getDownloadSkipSSLValidation());
+            markdownContentStream = fetchContentFromURL(client, url.toURI());
+        } catch (MalformedURLException | URISyntaxException e) {
+            markdownContentStream = IoUtil.toStream(markdownData);
+        }
+
+        return markdownContentStream;
     }
 
     /**
@@ -894,7 +942,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                     String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                     String xRegistryName, String xRegistryNameEncoded,
                                                     String xRegistryContentHash, String xRegistryHashAlgorithm,
-                                                    InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
+                                                    InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData, InputStream markdownContent) {
 
         requireParameter("groupId", groupId);
 
@@ -914,6 +962,12 @@ public class GroupsResourceImpl implements GroupsResource {
         if (content.bytes().length == 0) {
             throw new BadRequestException(EMPTY_CONTENT_ERROR_MESSAGE);
         }
+
+        ContentHandle markdownContentHandle = null;
+        if(null != markdownContent ){
+            markdownContentHandle = ContentHandle.create(markdownContent);
+        }
+
 
         // Mitigation for MITM attacks, verify that the artifact is the expected one
         if (xRegistryContentHash != null) {
@@ -956,13 +1010,12 @@ public class GroupsResourceImpl implements GroupsResource {
             String artifactType = ArtifactTypeUtil.determineArtifactType(content, xRegistryArtifactType, ct, factory.getAllArtifactTypes());
 
             final List<ArtifactReferenceDto> referencesAsDtos = toReferenceDtos(references);
+            final MarkdownContentDto markdownContentDto = V2ApiUtil.toMarkdownContentDto(markdownContentHandle);
 
             //Try to resolve the new artifact references and the nested ones (if any)
             final Map<String, ContentHandle> resolvedReferences = RegistryContentUtils.recursivelyResolveReferences(referencesAsDtos, storage::getContentByReference);
 
             rulesService.applyRules(defaultGroupIdToNull(groupId), artifactId, artifactType, content, RuleApplicationType.CREATE, references, resolvedReferences);
-
-//            Changes related to Additonal Metadata
 
             final String finalArtifactId = artifactId;
             EditableArtifactMetaDataDto metaData;
@@ -975,7 +1028,7 @@ public class GroupsResourceImpl implements GroupsResource {
             }
 
 
-            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
+            ArtifactMetaDataDto amd = storage.createArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentDto.getContent());
             return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), finalArtifactId, artifactType, amd);
         } catch (ArtifactAlreadyExistsException ex) {
             return handleIfExists(groupId, xRegistryArtifactId, xRegistryVersion, ifExists, artifactName, artifactDescription, content, ct, fcanonical, references, additionalMetaData);
@@ -1012,7 +1065,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryVersion, String xRegistryName,
                                                  String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, InputStream data) {
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList(), null);
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, data, Collections.emptyList(), null, null);
     }
 
     /**
@@ -1025,7 +1078,11 @@ public class GroupsResourceImpl implements GroupsResource {
                                                  String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded,
                                                  String xRegistryNameEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails());
+        InputStream markdownStream = null;
+        if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
+            markdownStream =  IoUtil.toStream(data.getMarkdown());
+        }
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails(), markdownStream);
     }
 
     /**
@@ -1041,7 +1098,7 @@ public class GroupsResourceImpl implements GroupsResource {
      * @param data
      * @param references
      */
-    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData) {
+    private VersionMetaData createArtifactVersionWithRefs(String groupId, String artifactId, String xRegistryVersion, String xRegistryName, String xRegistryDescription, String xRegistryDescriptionEncoded, String xRegistryNameEncoded, InputStream data, List<ArtifactReference> references, ArtifactAdditionalMetaData additionalMetaData, InputStream markdownContent) {
         // TODO do something with the user-provided version info
         requireParameter("groupId", groupId);
         requireParameter("artifactId", artifactId);
@@ -1061,8 +1118,15 @@ public class GroupsResourceImpl implements GroupsResource {
             content = ContentTypeUtil.yamlToJson(content);
         }
 
+        //markdowncontent related changes
+        ContentHandle markdownContentHandle = null;
+        if(null != markdownContent ){
+            markdownContentHandle = ContentHandle.create(markdownContent);
+        }
+
         //Transform the given references into dtos and set the contentId, this will also detect if any of the passed references does not exist.
         final List<ArtifactReferenceDto> referencesAsDtos = toReferenceDtos(references);
+        final MarkdownContentDto markdownContentDto = V2ApiUtil.toMarkdownContentDto(markdownContentHandle);
 
         //Try to resolve the new artifact references and the nested ones (if any)
         final Map<String, ContentHandle> resolvedReferences = RegistryContentUtils.recursivelyResolveReferences(referencesAsDtos, storage::getContentByReference);
@@ -1077,7 +1141,7 @@ public class GroupsResourceImpl implements GroupsResource {
         } else {
             metaData = getEditableMetaData(artifactName, artifactDescription);
         }
-        ArtifactMetaDataDto amd = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos);
+        ArtifactMetaDataDto amd = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, xRegistryVersion, artifactType, content, metaData, referencesAsDtos, markdownContentDto.getContent());
         return V2ApiUtil.dtoToVersionMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, amd);
     }
 
@@ -1189,7 +1253,7 @@ public class GroupsResourceImpl implements GroupsResource {
         if(additionalMetaData != null) {
             metaData.setHasAdditionalMetaData(true);
         }
-        ArtifactMetaDataDto dto = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, version, artifactType, content, metaData, referencesAsDtos);
+        ArtifactMetaDataDto dto = storage.updateArtifactWithMetadata(defaultGroupIdToNull(groupId), artifactId, version, artifactType, content, metaData, referencesAsDtos, null);
         return V2ApiUtil.dtoToMetaData(defaultGroupIdToNull(groupId), artifactId, artifactType, dto);
     }
 
@@ -1219,4 +1283,6 @@ public class GroupsResourceImpl implements GroupsResource {
                 .map(V2ApiUtil::referenceToDto)
                 .collect(Collectors.toList());
     }
+
+
 }

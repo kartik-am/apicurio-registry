@@ -117,4 +117,5 @@ public class H2SqlStatements extends CommonSqlStatements {
     public String upsertReference() {
         return "INSERT INTO artifactreferences (tenantId, contentId, groupId, artifactId, version, name) VALUES (?, ?, ?, ?, ?, ?)";
     }
+
 }
