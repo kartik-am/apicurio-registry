@@ -55,37 +55,15 @@ export class MarkdownTabContent extends PureComponent<MarkdownTabContentProps, M
             return <ErrorTabContent error={{ errorMessage: "An error occurred while rendering the Markdown content", error: this.state.error }} />
         }
 
-        const response = `
-# README
-## heading 2
-### heading 3
-~~strikethrough~~  
-
-> Blockquote  
-
-**strong**  
-*italics*  
-***
-[Gmail](https://gmail.com)  
-***
-1. ordered list
-2. ordered list
-- unordered list
-- unordered list  
-
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
-`;
-
         let visualizer: React.ReactElement | null = null;
 
-
-         visualizer = <div>
-            {/* TODO: Update the component to render the cotnent of the Markdown from the response */}
-            {/* <MarkdownPreview source={response} style={{ padding: 16}}></MarkdownPreview> */}
-            <MarkdownPreview source={this.state.markdownParsedContent} style={{ padding: 16}}></MarkdownPreview>
+        // rehypeRewrite is required to disable links in headers
+        visualizer = <div>
+            <MarkdownPreview source={this.state.markdownParsedContent} style={{ padding: 22 }} rehypeRewrite={(node, index, parent) => {
+                if (node.tagName === "a" && parent && /^h(1|2|3|4|5|6)/.test(parent.tagName)) {
+                    parent.children = parent.children.slice(1)
+                }
+            }}></MarkdownPreview>
         </div>
 
 
