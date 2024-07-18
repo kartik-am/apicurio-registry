@@ -189,6 +189,24 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                         )}</DescriptionListDescription>
                                     }
                                 </DescriptionListGroup>
+                                
+                                {/* <DescriptionListGroup>
+                                    <DescriptionListTerm>Name</DescriptionListTerm>
+                                    <DescriptionListDescription className={!this.props.artifact.name ? "empty-state-text" : ""}>{this.artifactName()}</DescriptionListDescription>
+                                </DescriptionListGroup> */}
+                                
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Owner</DescriptionListTerm>
+                                    <DescriptionListDescription>{this.props.artifact.owner}</DescriptionListDescription>
+                                </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Approval Status</DescriptionListTerm>
+                                    <DescriptionListDescription className={!this.props.artifact.approvalStatus ? "empty-state-text" : ""}>{this.artifactapprovalStatus()}</DescriptionListDescription>
+                                </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                    <DescriptionListTerm>Category</DescriptionListTerm>
+                                    <DescriptionListDescription className={!this.props.artifact.category ? "empty-state-text" : ""}>{this.artifactcategory()}</DescriptionListDescription>
+                                </DescriptionListGroup>
                             </DescriptionList>
                             <div className="actions">
                                 <Button id="download-action"
@@ -242,6 +260,14 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
 
     private artifactName(): string {
         return this.props.artifact.name || "No name";
+    }
+
+    private artifactcategory(): string {
+        return this.props.artifact.category || "";
+    }
+
+    private artifactapprovalStatus(): string {
+        return this.props.artifact.approvalStatus || "";
     }
 
     private isArtifactInGroup = (): boolean => {

@@ -33,5 +33,8 @@ export class ArtifactMetaData {
     public globalId: number;
     public contentId: number|null;
     public state: string;
+    public owner: string;
+    public approvalStatus: string;
+    public category: string;
 
 }

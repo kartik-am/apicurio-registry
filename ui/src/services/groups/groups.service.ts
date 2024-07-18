@@ -66,6 +66,8 @@ export interface EditableMetaData {
     description: string;
     labels: string[];
     properties: { [key: string]: string|undefined };
+    approvalStatus: string;
+    category: string;
 }
 
 export interface ClientGeneration {
@@ -198,6 +200,23 @@ export class GroupsService extends BaseService {
         let endpoint: string = this.endpoint("/v2/groups/:groupId/artifacts/:artifactId/versions/:version", { groupId, artifactId, version });
         if (version === "latest") {
             endpoint = this.endpoint("/v2/groups/:groupId/artifacts/:artifactId", { groupId, artifactId });
+        }
+
+        const options: any = this.options({
+            "Accept": "*"
+        });
+        options.maxContentLength = "5242880"; // TODO 5MB hard-coded, make this configurable?
+        options.responseType = "text";
+        options.transformResponse = (data: any) => data;
+        return this.httpGet<string>(endpoint, options);
+    }
+
+    public getMarkdownContent(groupId: string|null, artifactId: string, version: string): Promise<string> {
+        groupId = this.normalizeGroupId(groupId);
+
+        let endpoint: string = this.endpoint("/v2/groups/:groupId/artifacts/:artifactId/versions/:version/markdown", { groupId, artifactId, version });
+        if (version === "latest") {
+            endpoint = this.endpoint("/v2/groups/:groupId/artifacts/:artifactId/markdown", { groupId, artifactId });
         }
 
         const options: any = this.options({
