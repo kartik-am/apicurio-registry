@@ -17,10 +17,10 @@
 import React from "react";
 import "./editMetaDataModal.css";
 import { PureComponent, PureComponentProps, PureComponentState } from "../../../../components";
-import { Button, Form, FormGroup, FormSelect, FormSelectOption, Grid, GridItem, HelperText, HelperTextItem, Modal, TextArea, TextInput } from "@patternfly/react-core";
+import { Button, Form, Dropdown, DropdownItem, ExpandableSection, DropdownToggle, FormGroup, FormSelect, FormSelectOption, Grid, GridItem, HelperText, HelperTextItem, Modal, TextArea, TextInput, DropdownContext } from "@patternfly/react-core";
 import { EditableMetaData } from "../../../../../services";
 import { ArtifactProperty, listToProperties, PropertiesFormGroup, propertiesToList } from "./propertiesFormGroup";
-
+import { CaretDownIcon} from "@patternfly/react-icons";
 
 /**
  * Properties
@@ -30,6 +30,8 @@ export interface EditMetaDataModalProps extends PureComponentProps {
     description: string;
     labels: string[];
     properties: { [key: string]: string|undefined };
+    approvalStatus: string;
+    category: string;
     isOpen: boolean;
     onClose: () => void;
     onEditMetaData: (metaData: EditableMetaData) => void;
@@ -40,6 +42,8 @@ export interface EditMetaDataModalProps extends PureComponentProps {
  */
 export interface EditMetaDataModalState extends PureComponentState {
     labels: string;
+    approvalStatusExpanded: boolean;
+    categoryExpanded: boolean;
     properties: ArtifactProperty[];
     metaData: EditableMetaData;
     isValid: boolean;
@@ -129,40 +133,42 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                             onChange={this.onPropertiesChange} />
                         <GridItem span={12}>
                             <FormGroup label="Approval Status" type="string" fieldId="form-approval-status">
-                                <FormSelect
-                                    id="form-approval-status"
-                                    onChange={() => console.log("Approval Status changed")}
-                                    aria-label="FormSelect Input"
-                                >
-                                    {this.approvalStatusOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={option.disabled}
-                                            key={index}
-                                            value={option.value}
-                                            label={option.label}
-                                            isPlaceholder={option.isPlaceholder}
-                                        />
-                                    ))}
-                                </FormSelect>
+                                <div>
+                                    <Dropdown
+                                        toggle={
+                                            <DropdownToggle id="form-type-toggle" data-testid="form-type-toggle" onToggle={this.onApprovalStatusToggle} toggleIndicator={CaretDownIcon}>
+                                                { this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus : "DRAFT" }
+                                            </DropdownToggle>
+                                        }
+                                        onSelect={this.onApprovalStatusSelect}
+                                        isOpen={this.state.approvalStatusExpanded}
+                                        dropdownItems={[
+                                            <DropdownItem id="DRAFT" key="DRAFT" data-testid="form-type-auto"><i>DRAFT</i></DropdownItem>,
+                                            <DropdownItem id="APPROVED" key="APPROVED" data-testid="form-type-auto"><i>APPROVED</i></DropdownItem>,
+                                            <DropdownItem id="REJECTED" key="REJECTED" data-testid="form-type-auto"><i>REJECTED</i></DropdownItem>,
+                                        ]}
+                                    />
+                                </div>
                             </FormGroup>
                         </GridItem>
                         <GridItem span={12}>
                             <FormGroup label="Artifact Category" type="string" fieldId="form-category">
-                                <FormSelect
-                                    id="form-category"
-                                    onChange={() => console.log("Category changed")}
-                                    aria-label="FormSelect Input"
-                                >
-                                    {this.categoryOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={option.disabled}
-                                            key={index}
-                                            value={option.value}
-                                            label={option.label}
-                                            isPlaceholder={option.isPlaceholder}
-                                        />
-                                    ))}
-                                </FormSelect>
+                                <div>
+                                    <Dropdown
+                                        toggle={
+                                            <DropdownToggle id="form-category-type-toggle" data-testid="form-category-type-toggle" onToggle={this.onCategoryToggle} toggleIndicator={CaretDownIcon}>
+                                                { this.state.metaData.category ? this.state.metaData.category : "PRIVATE" }
+                                            </DropdownToggle>
+                                        }
+                                        onSelect={this.onCategorySelect}
+                                        isOpen={this.state.categoryExpanded}
+                                        dropdownItems={[
+                                            <DropdownItem id="PRIVATE" key="PRIVATE" data-testid="form-type-auto"><i>PRIVATE</i></DropdownItem>,
+                                            <DropdownItem id="INTERNAL" key="INTERNAL" data-testid="form-type-auto"><i>INTERNAL</i></DropdownItem>,
+                                            <DropdownItem id="EXTERNAL" key="EXTERNAL" data-testid="form-type-auto"><i>EXTERNAL</i></DropdownItem>,
+                                        ]}
+                                    />
+                                </div>
                             </FormGroup>
                         </GridItem>
                     </Grid>
@@ -170,18 +176,6 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
             </Modal>
         );
     }
-
-    private approvalStatusOptions = [
-        { value: 'DRAFT', label: 'DRAFT', disabled: false, isPlaceholder: true },
-        { value: 'APPROVED', label: 'APPROVED', disabled: false, isPlaceholder: false },
-        { value: 'REJECTED', label: 'REJECTED', disabled: false, isPlaceholder: false },
-      ];
-
-      private categoryOptions = [
-        { value: 'PRIVATE', label: 'PRIVATE', disabled: false, isPlaceholder: true },
-        { value: 'INTERNAL', label: 'INTERNAL', disabled: false, isPlaceholder: false },
-        { value: 'EXTERNAL', label: 'EXTERNAL', disabled: false, isPlaceholder: false },
-      ];
 
     public componentDidUpdate(prevProps: Readonly<EditMetaDataModalProps>): void {
         if (this.props.isOpen && !prevProps.isOpen) {
@@ -192,7 +186,9 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
                     description: this.props.description,
                     labels: this.props.labels,
                     properties: this.props.properties,
-                    name: this.props.name
+                    name: this.props.name,
+                    approvalStatus: this.props.approvalStatus,
+                    category: this.props.category
                 },
                 isValid: true
             });
@@ -204,11 +200,15 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
             labels: "",
             properties: [],
             isValid: true,
+            approvalStatusExpanded: false,
+            categoryExpanded: false,
             metaData: {
                 description: "",
                 labels: [],
                 properties: {},
-                name: ""
+                name: "",
+                approvalStatus: "",
+                category: ""
             }
         };
     }
@@ -216,6 +216,8 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
     private doEdit = (): void => {
         const metaData: EditableMetaData = {
             ...this.state.metaData,
+            category: this.state.metaData.category ? this.state.metaData.category : "PRIVATE",
+            approvalStatus: this.state.metaData.approvalStatus ? this.state.metaData.approvalStatus : "DRAFT",
             properties: listToProperties(this.state.properties)
         }
         this.props.onEditMetaData(metaData);
@@ -230,6 +232,43 @@ export class EditMetaDataModal extends PureComponent<EditMetaDataModalProps, Edi
         });
     };
 
+    private onApprovalStatusToggle = (isExpanded: boolean): void => {
+        this.setSingleState("approvalStatusExpanded", isExpanded);
+    };
+
+    private onApprovalStatusSelect = (event: React.SyntheticEvent<HTMLDivElement>|undefined): void => {
+        let newStatus: string = event && event.currentTarget && event.currentTarget.id ? event.currentTarget.id : "";
+        this.setMultiState({
+            metaData: {
+                ...this.state.metaData,
+               approvalStatus : newStatus,
+            },
+            approvalStatusExpanded: false
+        }, () => {
+            this.validate();
+        });
+    };
+
+
+    private onCategoryToggle = (isExpanded: boolean): void => {
+        this.setSingleState("categoryExpanded", isExpanded);
+    };
+
+
+    private onCategorySelect = (event: React.SyntheticEvent<HTMLDivElement>|undefined): void => {
+        const newCategory: string = event && event.currentTarget && event.currentTarget.id ? event.currentTarget.id : "";
+        this.setMultiState({
+            metaData: {
+                ...this.state.metaData,
+               category : newCategory,
+            },
+            categoryExpanded: false
+        }, () => {
+            this.validate();
+        });
+    };
+
+    
     private onLabelsChange = (value: string): void => {
         let labels: string[] = [];
         if (value && value.trim().length > 0) {
