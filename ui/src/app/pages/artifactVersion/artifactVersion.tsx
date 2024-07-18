@@ -207,6 +207,8 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
                     description={this.artifactDescription()}
                     labels={this.artifactLabels()}
                     properties={this.artifactProperties()}
+                    approvalStatus={this.approvalStatus()}
+                    category={this.category()}
                     isOpen={this.state.isEditModalOpen}
                     onClose={this.onEditModalClose}
                     onEditMetaData={this.doEditMetaData}
@@ -440,6 +442,18 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
 
     private artifactProperties(): { [key: string]: string } {
         return this.state.artifact?.properties || {};
+    }
+
+    private approvalStatus(): string {
+        return this.state.artifact ? (
+            this.state.artifact.approvalStatus ? this.state.artifact.approvalStatus : "DRAFT"
+        ) : "DRAFT";
+    }
+
+    private category(): string {
+        return this.state.artifact ? (
+            this.state.artifact.category ? this.state.artifact.category : "PRIVATE"
+        ) : "PRIVATE";
     }
 
     private onUploadFormValid = (isValid: boolean): void => {
