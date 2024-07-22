@@ -130,8 +130,9 @@ export class ArtifactVersionPage extends PageComponent<ArtifactVersionPageProps,
             tabs.splice(1, 1);
         }
 
-        if(!this.state.markdownContent) {
-            tabs.splice(4, 1);
+        const tabKeyIndex: number = tabs.findIndex(tab => tab.props.title === "Documentation");
+        if (!this.state.markdownContent && tabKeyIndex !== -1) {
+            tabs.splice(tabKeyIndex, 1);
         }
 
         let groupId: string = this.groupIdParam();
