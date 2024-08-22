@@ -1329,9 +1329,10 @@ public abstract class AbstractSqlRegistryStorage implements RegistryStorage {
                         });
                         break;
                     case group:
-                        where.append("(v.groupId = ?)");
+                        where.append("(v.groupId LIKE ?)");
+                        java.lang.System.out.println("Filter value: " + filter.getStringValue());
                         binders.add((query, idx) -> {
-                            query.bind(idx, normalizeGroupId(filter.getStringValue()));
+                            query.bind(idx, "%" + normalizeGroupId(filter.getStringValue()) + "%");
                         });
                         break;
                     case contentHash:
