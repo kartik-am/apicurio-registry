@@ -104,6 +104,7 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
                                         <DropdownItem key="labels" id="labels" data-testid="toolbar-filter-labels" component="button">Labels</DropdownItem>,
                                         <DropdownItem key="globalId" id="globalId" data-testid="toolbar-filter-globalId" component="button">GlobalId</DropdownItem>,
                                         <DropdownItem key="contentId" id="contentId" data-testid="toolbar-filter-contentId" component="button">ContentId</DropdownItem>,
+                                        <DropdownItem key="owner" id="owner" data-testid="toolbar-filter-owner" component="button">Owner</DropdownItem>,
                                     ]}
                                 />
                                 <TextInput name="filterValue" id="filterValue" type="search"
@@ -263,6 +264,8 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
                 return "GlobalId";
             case "contentId":
                 return "ContentId";
+            case "owner":
+                return "Owner";
             default:
                 return "Name";
         }
