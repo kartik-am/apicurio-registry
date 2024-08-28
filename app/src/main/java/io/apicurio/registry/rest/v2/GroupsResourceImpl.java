@@ -181,7 +181,7 @@ public class GroupsResourceImpl implements GroupsResource {
                                            String xRegistryName, String xRegistryNameEncoded, String xRegistryDescription,
                                            String xRegistryDescriptionEncoded, ArtifactContent data) {
         requireParameter("content", data.getContent());
-        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails());
+        return this.updateArtifactWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryNameEncoded, xRegistryDescription, xRegistryDescriptionEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditionalDetails());
     }
 
     /**
@@ -843,7 +843,7 @@ public class GroupsResourceImpl implements GroupsResource {
             if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
                 markdownContent = createMarkdownContent(data.getMarkdown());
             }
-            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(), data.getAdditonalDetails(), markdownContent);
+            return this.createArtifactWithRefs(groupId, xRegistryArtifactType, xRegistryArtifactId, xRegistryVersion, ifExists, canonical, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryName, xRegistryNameEncoded, xRegistryContentHash, xRegistryHashAlgorithm, content, data.getReferences(), data.getAdditionalDetails(), markdownContent);
         } catch (KeyManagementException kme) {
             throw new RuntimeException(kme);
         } catch (NoSuchAlgorithmException nsae) {
@@ -1082,7 +1082,7 @@ public class GroupsResourceImpl implements GroupsResource {
         if(null != data.getMarkdown() && !data.getMarkdown().isEmpty()){
             markdownStream =  IoUtil.toStream(data.getMarkdown());
         }
-        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditonalDetails(), markdownStream);
+        return this.createArtifactVersionWithRefs(groupId, artifactId, xRegistryVersion, xRegistryName, xRegistryDescription, xRegistryDescriptionEncoded, xRegistryNameEncoded, IoUtil.toStream(data.getContent()), data.getReferences(), data.getAdditionalDetails(), markdownStream);
     }
 
     /**
