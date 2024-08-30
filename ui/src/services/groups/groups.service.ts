@@ -49,6 +49,11 @@ export interface GetArtifactsCriteria {
     sortAscending: boolean;
 }
 
+export interface GetAdditionalCriteria {
+    approvalStatusValue: string;
+    categoryValue: string;
+}
+
 export interface Paging {
     page: number;
     pageSize: number;
@@ -121,7 +126,7 @@ export class GroupsService extends BaseService {
         return this.httpPostWithReturn<any, VersionMetaData>(endpoint, data.content, this.options(headers));
     }
 
-    public getArtifacts(criteria: GetArtifactsCriteria, paging: Paging): Promise<ArtifactsSearchResults> {
+    public getArtifacts(criteria: GetArtifactsCriteria, paging: Paging, additionalCriteria: GetAdditionalCriteria): Promise<ArtifactsSearchResults> {
         this.logger.debug("[GroupsService] Getting artifacts: ", criteria, paging);
         const start: number = (paging.page - 1) * paging.pageSize;
         const end: number = start + paging.pageSize;
@@ -139,6 +144,12 @@ export class GroupsService extends BaseService {
             } else {
                 queryParams[criteria.type] = criteria.value;
             }
+        }
+        if(additionalCriteria.approvalStatusValue && additionalCriteria.approvalStatusValue !== "ALL") {
+            queryParams["approvalStatus"] = additionalCriteria.approvalStatusValue;
+        }
+        if(additionalCriteria.categoryValue && additionalCriteria.categoryValue !== "ALL") {
+            queryParams["category"] = additionalCriteria.categoryValue;
         }
         const endpoint: string = this.endpoint("/v2/search/artifacts", {}, queryParams);
         return this.httpGet<ArtifactsSearchResults>(endpoint, undefined, (data) => {

@@ -29,6 +29,7 @@ import {
     TextInput,
     Toolbar,
     ToolbarContent,
+    ToolbarFilter,
     ToolbarItem
 } from "@patternfly/react-core";
 import { SearchIcon, SortAlphaDownAltIcon, SortAlphaDownIcon } from "@patternfly/react-icons";
@@ -40,6 +41,8 @@ export interface ArtifactsPageToolbarFilterCriteria {
     filterSelection: string;
     filterValue: string;
     ascending: boolean;
+    approvalStatus: string;
+    category: string;
 }
 
 /**
@@ -64,6 +67,8 @@ export interface ArtifactsPageToolbarState extends PureComponentState {
     filterIsExpanded: boolean;
     criteria: ArtifactsPageToolbarFilterCriteria;
     kebabIsOpen: boolean;
+    approvalStatusIsExpanded: boolean;
+    categoryIsExpanded: boolean;
 }
 
 /**
@@ -79,14 +84,29 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
             this.setSingleState("criteria", {
                 filterSelection: this.props.criteria.filterSelection,
                 filterValue: this.props.criteria.filterValue,
-                ascending: this.props.criteria.ascending
+                ascending: this.props.criteria.ascending,
+                approvalStatus: this.props.criteria.approvalStatus,
+                category: this.props.criteria.category
             });
         }
     }
 
     public render(): React.ReactElement {
         return (
-            <Toolbar id="artifacts-toolbar-1" className="artifacts-toolbar">
+            <Toolbar id="artifacts-toolbar-1" className="artifacts-toolbar"
+            clearAllFilters={() => {
+                this.setState({
+                    criteria: {
+                        filterSelection: "name",
+                        filterValue: "",
+                        ascending: true,
+                        approvalStatus: "",
+                        category: ""
+                    }
+                }, () => {
+                    this.fireOnChange();
+                });
+            }}>
                 <ToolbarContent>
                     <ToolbarItem className="filter-item">
                         <Form onSubmit={this.onFilterSubmit}>
@@ -108,19 +128,62 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
                                     ]}
                                 />
                                 <TextInput name="filterValue" id="filterValue" type="search"
-                                           value={this.state.criteria.filterValue}
-                                           onChange={this.onFilterValueChange}
-                                           data-testid="toolbar-filter-value"
+                                    value={this.state.criteria.filterValue}
+                                    onChange={this.onFilterValueChange}
+                                    data-testid="toolbar-filter-value"
                                            aria-label="search input example"/>
                                 <Button variant={ButtonVariant.control}
-                                        onClick={this.onFilterSubmit}
-                                        data-testid="toolbar-btn-filter-search"
-                                        aria-label="search button for search input">
+                                    onClick={this.onFilterSubmit}
+                                    data-testid="toolbar-btn-filter-search"
+                                    aria-label="search button for search input">
                                     <SearchIcon/>
                                 </Button>
                             </InputGroup>
                         </Form>
                     </ToolbarItem>
+                    <ToolbarFilter
+                        chips={this.state.criteria.approvalStatus ? [this.state.criteria.approvalStatus] : []}
+                        deleteChip={() => this.onDeleteChip("approvalStatus")}
+                        categoryName="Approval Status"
+                    >
+                        <ToolbarItem className="filter-item">
+                            <Dropdown
+                                onSelect={this.onApprovalStatusSelect}
+                                toggle={
+                                    <DropdownToggle data-testid="toolbar-approval-status-toggle" onToggle={this.onApprovalStatusToggle}>{this.approvalStatusFilterValueDisplay() || "Approval status"}</DropdownToggle>
+                                }
+                                isOpen={this.state.approvalStatusIsExpanded}
+                                dropdownItems={[
+                                    <DropdownItem key="all" id="ALL" data-testid="toolbar-approval-status-all" component="button">All</DropdownItem>,
+                                    <DropdownItem key="approved" id="APPROVED" data-testid="toolbar-approval-status-approved" component="button">Approved</DropdownItem>,
+                                    <DropdownItem key="draft" id="DRAFT" data-testid="toolbar-approval-status-draft" component="button">Draft</DropdownItem>,
+                                    <DropdownItem key="rejected" id="REJECTED" data-testid="toolbar-approval-status-rejected" component="button">Rejected</DropdownItem>,
+                                ]}
+                            />
+                        </ToolbarItem>
+                    </ToolbarFilter>
+                    <ToolbarFilter
+                        chips={this.state.criteria.category ? [this.state.criteria.category] : []}
+                        deleteChip={() => this.onDeleteChip("category")}
+                        // deleteChipGroup={() => this.onDeleteChipGroup()}
+                        categoryName="Category"
+                    >
+                        <ToolbarItem className="filter-item">
+                            <Dropdown
+                                onSelect={this.onCategorySelect}
+                                toggle={
+                                    <DropdownToggle data-testid="toolbar-category-toggle" onToggle={this.onCategoryToggle}>{this.categoryFilterValueDisplay()}</DropdownToggle>
+                                }
+                                isOpen={this.state.categoryIsExpanded}
+                                dropdownItems={[
+                                    <DropdownItem key="all" id="ALL" data-testid="toolbar-category-all" component="button">All</DropdownItem>,
+                                    <DropdownItem key="internal" id="INTERNAL" data-testid="toolbar-category-internal" component="button">Internal</DropdownItem>,
+                                    <DropdownItem key="external" id="EXTERNAL" data-testid="toolbar-category-external" component="button">External</DropdownItem>,
+                                    <DropdownItem key="private" id="PRIVATE" data-testid="toolbar-category-private" component="button">Private</DropdownItem>,
+                                ]}
+                            />
+                        </ToolbarItem>
+                    </ToolbarFilter>
                     <ToolbarItem className="sort-icon-item">
                         <Button variant="plain" aria-label="edit" data-testid="toolbar-btn-sort" onClick={this.onToggleAscending}>
                             {
@@ -132,7 +195,7 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
                         <IfAuth isDeveloper={true}>
                             <IfFeature feature="readOnly" isNot={true}>
                                 <Button className="btn-header-upload-artifact" data-testid="btn-header-upload-artifact"
-                                        variant="primary" onClick={this.props.onUploadArtifact}>Upload artifact</Button>
+                                    variant="primary" onClick={this.props.onUploadArtifact}>Upload artifact</Button>
                             </IfFeature>
                         </IfAuth>
                     </ToolbarItem>
@@ -176,7 +239,9 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
         return {
             filterIsExpanded: false,
             criteria: this.props.criteria,
-            kebabIsOpen: false
+            kebabIsOpen: false,
+            approvalStatusIsExpanded: false,
+            categoryIsExpanded: false
         }
     }
 
@@ -195,6 +260,7 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
         this.setState({
             filterIsExpanded: false,
             criteria: {
+                ...this.state.criteria,
                 ascending: this.state.criteria.ascending,
                 filterSelection: value,
                 filterValue: this.state.criteria.filterValue
@@ -204,7 +270,45 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
         });
     };
 
-    private onKebabSelect = (event: React.SyntheticEvent<HTMLDivElement>|undefined): void => {
+    private onApprovalStatusToggle = (isExpanded: boolean): void => {
+        Services.getLoggerService().debug("[ArtifactsPageToolbar] Toggling approval status dropdown.");
+        this.setSingleState("approvalStatusIsExpanded", isExpanded);
+    };
+
+    private onApprovalStatusSelect = (event: React.SyntheticEvent<HTMLDivElement> | undefined): void => {
+        const value: string = event && event.currentTarget && event.currentTarget.id ? event.currentTarget.id : "";
+        Services.getLoggerService().debug("[ArtifactsPageToolbar] Setting approval status to: %s", value);
+        this.setState({
+            approvalStatusIsExpanded: false,
+            criteria: {
+                ...this.state.criteria,
+                approvalStatus: value
+            }
+        }, () => {
+            this.fireOnChange();
+        });
+    };
+
+    private onCategoryToggle = (isExpanded: boolean): void => {
+        Services.getLoggerService().debug("[ArtifactsPageToolbar] Toggling category dropdown.");
+        this.setSingleState("categoryIsExpanded", isExpanded);
+    };
+
+    private onCategorySelect = (event: React.SyntheticEvent<HTMLDivElement> | undefined): void => {
+        const value: string = event && event.currentTarget && event.currentTarget.id ? event.currentTarget.id : "";
+        Services.getLoggerService().debug("[ArtifactsPageToolbar] Setting category to: %s", value);
+        this.setState({
+            categoryIsExpanded: false,
+            criteria: {
+                ...this.state.criteria,
+                category: value
+            }
+        }, () => {
+            this.fireOnChange();
+        });
+    };
+
+    private onKebabSelect = (event: React.SyntheticEvent<HTMLDivElement> | undefined): void => {
         const value: string = event && event.currentTarget && event.currentTarget.id ? event.currentTarget.id : "";
         Services.getLoggerService().debug("[ArtifactsPageToolbar] Toolbar action: ", value);
         this.onKebabToggle(false);
@@ -225,6 +329,7 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
     private onFilterValueChange = (value: any): void => {
         Services.getLoggerService().debug("[ArtifactsPageToolbar] Setting filter value: %o", value);
         this.setSingleState("criteria", {
+            ...this.state.criteria,
             ascending: this.state.criteria.ascending,
             filterSelection: this.state.criteria.filterSelection,
             filterValue: value
@@ -242,6 +347,18 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
         Services.getLoggerService().debug("[ArtifactsPageToolbar] Toggle the ascending flag.");
         const sortAscending: boolean = !this.state.criteria.ascending;
         this.setSingleState("ascending", sortAscending, () => {
+            this.fireOnChange();
+        });
+    };
+
+    private onDeleteChip = (type: string) => {
+        this.setState({
+            criteria: {
+                ...this.state.criteria,
+                ...(type === "approvalStatus" ? { approvalStatus: "" } : {}),
+                ...(type === "category" ? { category: "" } : {})
+            }
+        }, () => {
             this.fireOnChange();
         });
     };
@@ -268,6 +385,36 @@ export class ArtifactsPageToolbar extends PureComponent<ArtifactsPageToolbarProp
                 return "Owner";
             default:
                 return "Name";
+        }
+    }
+
+    private approvalStatusFilterValueDisplay(): string {
+        switch (this.state.criteria.approvalStatus) {
+            case "APPROVED":
+                return "Approved";
+            case "DRAFT":
+                return "Draft";
+            case "REJECTED":
+                return "Rejected";
+            case "ALL":
+                return "All";
+            default:
+                return "Approval status";
+        }
+    }
+
+    private categoryFilterValueDisplay(): string {
+        switch (this.state.criteria.category) {
+            case "INTERNAL":
+                return "Internal";
+            case "EXTERNAL":
+                return "External";
+            case "PRIVATE":
+                return "Private";
+            case "ALL":
+                return "All";
+            default:
+                return "Category";
         }
     }
 }

@@ -36,7 +36,7 @@ import { ArtifactsPageEmptyState } from "./components/empty";
 import { UploadArtifactForm } from "./components/uploadForm";
 import { InvalidContentModal } from "../../components/modals";
 import { If } from "../../components/common/if";
-import { ArtifactsSearchResults, CreateArtifactData, GetArtifactsCriteria, Paging, Services } from "../../../services";
+import { ArtifactsSearchResults, CreateArtifactData, GetAdditionalCriteria, GetArtifactsCriteria, Paging, Services } from "../../../services";
 import { SearchedArtifact } from "../../../models";
 import { PleaseWaitModal } from "../../components/modals/pleaseWaitModal";
 import { RootPageHeader } from "../../components";
@@ -355,7 +355,12 @@ export class ArtifactsPage extends PageComponent<ArtifactsPageProps, ArtifactsPa
             type: this.state.criteria.filterSelection,
             value: this.state.criteria.filterValue
         };
-        return Services.getGroupsService().getArtifacts(gac, this.state.paging).then(results => {
+        const additionalCriteria: GetAdditionalCriteria = {
+            approvalStatusValue: this.state.criteria.approvalStatus,
+            categoryValue: this.state.criteria.category
+
+        }
+        return Services.getGroupsService().getArtifacts(gac, this.state.paging, additionalCriteria).then(results => {
             this.onArtifactsLoaded(results);
         }).catch(error => {
             this.handleServerError(error, "Error searching for artifacts.");
