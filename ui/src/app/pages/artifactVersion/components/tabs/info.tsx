@@ -38,9 +38,10 @@ import {
     Label,
     Split,
     SplitItem,
+    Tooltip,
     Truncate
 } from "@patternfly/react-core";
-import { DownloadIcon, PencilAltIcon } from "@patternfly/react-icons";
+import { DownloadIcon, InfoCircleIcon, PencilAltIcon } from "@patternfly/react-icons";
 import Moment from "react-moment";
 import { IfFeature } from "../../../../components/common/ifFeature";
 import { ArtifactMetaData, Rule } from "../../../../../models";
@@ -143,9 +144,9 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                                 <IfAuth isAdminOrOwner={true} owner={this.props.artifact.createdBy}>
                                                     <IfFeature feature="readOnly" isNot={true}>
                                                         <Button id="edit-action"
-                                                                data-testid="artifact-btn-edit"
-                                                                onClick={this.props.onChangeOwner}
-                                                                variant="link"><PencilAltIcon /></Button>
+                                                            data-testid="artifact-btn-edit"
+                                                            onClick={this.props.onChangeOwner}
+                                                            variant="link"><PencilAltIcon /></Button>
                                                     </IfFeature>
                                                 </IfAuth>
                                             </span>
@@ -169,7 +170,7 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                     {this.labels().length ?
                                         <DescriptionListDescription>{
                                             this.labels().map((label) =>
-                                                <Label key={`label-${label}`} color="blue" style={{marginBottom: "2px", marginLeft: "5px"}}>
+                                                <Label key={`label-${label}`} color="blue" style={{ marginBottom: "2px", marginLeft: "5px" }}>
                                                     <Truncate className="label-truncate" content={label} />
                                                 </Label>
                                             )
@@ -183,37 +184,70 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                     {!this.props.artifact.properties || !Object.keys(this.props.artifact.properties).length ?
                                         <DescriptionListDescription className="empty-state-text">No properties</DescriptionListDescription> :
                                         <DescriptionListDescription>{Object.entries(this.props.artifact.properties).map(([key, value]) =>
-                                            <Label key={`property-${key}`} color="purple" style={{marginBottom: "2px", marginLeft: "5px"}}>
+                                            <Label key={`property-${key}`} color="purple" style={{ marginBottom: "2px", marginLeft: "5px" }}>
                                                 <Truncate className="property-truncate" content={`${key}=${value}`} />
                                             </Label>
                                         )}</DescriptionListDescription>
                                     }
                                 </DescriptionListGroup>
-                                
+
                                 {/* <DescriptionListGroup>
                                     <DescriptionListTerm>Name</DescriptionListTerm>
                                     <DescriptionListDescription className={!this.props.artifact.name ? "empty-state-text" : ""}>{this.artifactName()}</DescriptionListDescription>
                                 </DescriptionListGroup> */}
-                                
+
                                 <DescriptionListGroup>
-                                    <DescriptionListTerm>Owner</DescriptionListTerm>
+                                    <DescriptionListTerm>
+                                        <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <div> Owner</div>
+                                            <Tooltip content={
+                                                <div>
+                                                    Owner is the user who created the artifact.
+                                                </div>
+                                            }>
+                                                <InfoCircleIcon style={{ marginLeft: '8px', cursor: 'pointer', color: '#007bff' }} />
+                                            </Tooltip>
+                                        </div>
+                                    </DescriptionListTerm>
                                     <DescriptionListDescription>{this.props.artifact.owner}</DescriptionListDescription>
                                 </DescriptionListGroup>
                                 <DescriptionListGroup>
-                                    <DescriptionListTerm>Approval Status</DescriptionListTerm>
+                                    <DescriptionListTerm>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <div>Approval Status</div>
+                                            <Tooltip content={
+                                                <div>
+                                                    Approval status indicates the current status of the artifact approval process.
+                                                </div>
+                                            }>
+                                                <InfoCircleIcon style={{ marginLeft: '8px', cursor: 'pointer', color: '#007bff' }} />
+                                            </Tooltip>
+                                        </div>
+                                    </DescriptionListTerm>
                                     <DescriptionListDescription className={!this.props.artifact.approvalStatus ? "empty-state-text" : ""}>{this.artifactapprovalStatus()}</DescriptionListDescription>
                                 </DescriptionListGroup>
                                 <DescriptionListGroup>
-                                    <DescriptionListTerm>Category</DescriptionListTerm>
+                                    <DescriptionListTerm>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <div>Category</div>
+                                            <Tooltip content={
+                                                <div>
+                                                   Category indicates the classification of the artifact's visibility.
+                                                </div>
+                                            }>
+                                                <InfoCircleIcon style={{ marginLeft: '8px', cursor: 'pointer', color: '#007bff' }} />
+                                            </Tooltip>
+                                        </div>
+                                    </DescriptionListTerm>
                                     <DescriptionListDescription className={!this.props.artifact.category ? "empty-state-text" : ""}>{this.artifactcategory()}</DescriptionListDescription>
                                 </DescriptionListGroup>
                             </DescriptionList>
                             <div className="actions">
                                 <Button id="download-action"
-                                        data-testid="artifact-btn-download"
-                                        title="Download artifact content"
-                                        onClick={this.props.onDownloadArtifact}
-                                        variant="secondary"><DownloadIcon /> Download</Button>
+                                    data-testid="artifact-btn-download"
+                                    title="Download artifact content"
+                                    onClick={this.props.onDownloadArtifact}
+                                    variant="secondary"><DownloadIcon /> Download</Button>
                             </div>
                         </CardBody>
                     </Card>
@@ -231,9 +265,9 @@ export class InfoTabContent extends PureComponent<InfoTabContentProps, InfoTabCo
                                 the equivalent global rules.
                             </p>
                             <RuleList rules={this.props.rules}
-                                      onEnableRule={this.props.onEnableRule}
-                                      onDisableRule={this.props.onDisableRule}
-                                      onConfigureRule={this.props.onConfigureRule}
+                                onEnableRule={this.props.onEnableRule}
+                                onDisableRule={this.props.onDisableRule}
+                                onConfigureRule={this.props.onConfigureRule}
                             />
                         </CardBody>
                     </Card>
